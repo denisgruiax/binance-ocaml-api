@@ -1,0 +1,3 @@
+(library
+ (public_name binance_ocaml_api)
+ (name binance_ocaml_api))
