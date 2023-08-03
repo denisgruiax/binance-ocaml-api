@@ -1,0 +1,3 @@
+(library
+ (name price_test)
+ (libraries lib alcotest))
