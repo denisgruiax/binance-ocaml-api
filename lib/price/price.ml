@@ -3,9 +3,8 @@ module type Price' = sig
   val get_price : unit -> float
 end
 
-module Make(Endpoint : sig val price_url: string end)(Pair : sig val pair : string end) : Price' = struct
-  let endpoint = Endpoint.price_url ^ "?symbol=" ^ Pair.pair;;
-  let json_to_float json = let price_string = Ezjsonm.(get_string (find json ["price"])) in float_of_string price_string;;
+module Make(Endpoint : sig val price_url: string end)(Pair : sig val symbol : string end) : Price' = struct
+  let endpoint = Endpoint.price_url ^ "?symbol=" ^ Pair.symbol;;
 
   let get_json_from_api_url endpoint = let ezjsonm =
                                          Lwt.bind
@@ -16,6 +15,8 @@ module Make(Endpoint : sig val price_url: string end)(Pair : sig val pair : stri
                                                   Lwt.return json))
     in
     Lwt_main.run ezjsonm;;
+
+  let json_to_float json = let price_string = Ezjsonm.(get_string (find json ["price"])) in float_of_string price_string;;
 
   let get_price () = json_to_float (get_json_from_api_url endpoint);;
 end
