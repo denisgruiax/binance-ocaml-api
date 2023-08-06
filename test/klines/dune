@@ -1,0 +1,3 @@
+(library
+ (name klines_test)
+ (libraries lib alcotest))
