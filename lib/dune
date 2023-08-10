@@ -1,3 +1,6 @@
+(include_subdirs no)
+
 (library
- (name lib)
+ (name binance_ocaml_api)
+ (public_name binance_ocaml_api)
  (libraries price klines order utilities))

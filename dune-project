@@ -23,4 +23,28 @@
  (tags
   (topics "to describe" your project)))
 
+(package
+ (name utilities)
+ (synopsis "Will be defined.")
+ (description "Will be defined.")
+ (depends ocaml dune))
+
+(package
+ (name price)
+ (synopsis "Will be defined.")
+ (description "Will be defined.")
+ (depends ocaml dune))
+
+(package
+ (name order)
+ (synopsis "Will be defined.")
+ (description "Will be defined.")
+ (depends ocaml dune))
+
+(package
+ (name klines)
+ (synopsis "Will be defined.")
+ (description "Will be defined.")
+ (depends ocaml dune))
+
 ; See the complete stanza docs at https://dune.readthedocs.io/en/stable/dune-files.html#dune-project

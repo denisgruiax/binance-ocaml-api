@@ -1,3 +1,5 @@
 (library
  (name order)
- (libraries lwt lwt.unix ezjsonm))
+ (public_name order)
+ (libraries lwt lwt.unix cstruct nocrypto conduit-lwt-unix ezjsonm cohttp cohttp-lwt cohttp-lwt-unix tls ssl)
+ (flags (:standard -w -67-69-32)))
