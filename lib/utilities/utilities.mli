@@ -5,7 +5,7 @@ module type BaseApis' =
     val api1 : string
     val api2 : string
     val api3 : string
-    val pai4 : string
+    val api4 : string
   end
 module BaseApis :
   sig
@@ -14,7 +14,7 @@ module BaseApis :
     val api1 : string
     val api2 : string
     val api3 : string
-    val pai4 : string
+    val api4 : string
   end
 module type Endpoints =
   sig

@@ -1,4 +1,4 @@
 (library
  (name utilities)
- (libraries )
+ (public_name utilities)
  (flags (:standard -w -67)))
