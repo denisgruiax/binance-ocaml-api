@@ -3,9 +3,9 @@ open Alcotest;;
 
 module Enpoints = Utilities.Make(struct let api = Utilities.BaseApis.api_default end);;
 
-module BitcoinCandlesticks = Klines.Make(struct let klines_url = Enpoints.klines end)(struct let symbol = "BTCUSDT" end)(struct let size = "5m" end);;
-module MultiversXCandlesticks = Klines.Make(struct let klines_url = Enpoints.klines end)(struct let symbol = "EGLDUSDT" end)(struct let size = "5m" end);;
-module PolkadotCandlesticks = Klines.Make(struct let klines_url = Enpoints.klines end)(struct let symbol = "DOTUSDT" end)(struct let size = "5m" end);;
+module BitcoinCandlesticks = Klines.Make(struct let klines_url = Enpoints.klines let symbol = "BTCUSDT" let size = "5m" end);;
+module MultiversXCandlesticks = Klines.Make(struct let klines_url = Enpoints.klines let symbol = "EGLDUSDT" let size = "5m" end);;
+module PolkadotCandlesticks = Klines.Make(struct let klines_url = Enpoints.klines let symbol = "DOTUSDT" let size = "5m" end);;
 
 
 let bitcoin_candlesticks = BitcoinCandlesticks.get_candlesticks ();;

@@ -3,8 +3,13 @@ module type Price' = sig
   val get_price : unit -> float
 end
 
-module Make(Endpoint : sig val price_url: string end)(Pair : sig val symbol : string end) : Price' = struct
-  let endpoint = Endpoint.price_url ^ "?symbol=" ^ Pair.symbol;;
+module type Parameters =  sig
+  val price_url: string
+  val symbol : string
+end
+
+module Make(P : Parameters) : Price' = struct
+  let endpoint = P.price_url ^ "?symbol=" ^ P.symbol;;
 
   let get_json_from_api_url endpoint = let ezjsonm =
                                          Lwt.bind
