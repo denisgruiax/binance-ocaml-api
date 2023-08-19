@@ -1,5 +1,11 @@
 module type Price' =
-  sig val endpoint : string val get_price : unit -> float end
+  sig val endpoint : string val get_price : unit -> float
+end
+
+module type Parameters =  sig
+  val price_url: string
+  val symbol : string
+end
+
 module Make :
-  functor (Endpoint : sig val price_url : string end)
-    (Pair : sig val symbol : string end) -> Price'
+  functor (P : Parameters) -> Price'

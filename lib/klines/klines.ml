@@ -3,10 +3,17 @@ module type CandleStick = sig
   val endpoint : string
   val interval : string
   val get_candlesticks : unit -> candlestick list
+  val get_list_of_open_price : unit -> float list
   val print_candlesticks : candlestick list -> unit
 end;;
 
-module Make(Endpoint : sig val klines_url : string end)(Pair : sig val symbol : string end) (Interval : sig val size : string end) : CandleStick = struct
+module type Parameters = sig
+  val klines_url : string
+  val symbol : string
+  val size : string
+end
+
+module Make(P : Parameters) : CandleStick = struct
   type candlestick = {
     open_time : int;
     open_price : float;
@@ -21,9 +28,9 @@ module Make(Endpoint : sig val klines_url : string end)(Pair : sig val symbol : 
     taker_buy_quote_asset_volume : float
   };;
 
-  let endpoint = Endpoint.klines_url ^ "?symbol=" ^ Pair.symbol ^ "&interval=" ^ Interval.size;;
+  let endpoint = P.klines_url ^ "?symbol=" ^ P.symbol ^ "&interval=" ^ P.size;;
 
-  let interval = Interval.size;;
+  let interval = P.size;;
 
   let get_json_from_api_url endpoint = 
     let ezjsonm =
@@ -73,6 +80,11 @@ module Make(Endpoint : sig val klines_url : string end)(Pair : sig val symbol : 
       |_ -> acc in parse_kline_data' json [];;
 
   let get_candlesticks () = parse_kline_data (get_json_from_api_url endpoint);;
+
+  let get_list_of_open_price () = let candlesticks = get_candlesticks () in
+    let rec get_list_of_open_price' candlesticks acc = match candlesticks with
+      |[] -> List.rev acc
+      |head::tail -> get_list_of_open_price' tail (head.open_price::acc) in get_list_of_open_price' candlesticks [];;
 
   let print_candlestick = function
     |{
