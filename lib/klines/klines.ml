@@ -135,6 +135,6 @@ let print_candlestick = function
 
 let print_candlesticks candlestick_list = let rec print_inner_lists' candlestick_list = match candlestick_list with
     |[] -> ()
-    |l0::ln -> print_candlestick l0 ; print_newline (); print_inner_lists' ln in print_inner_lists' candlestick_list;;
+    |first::tail -> print_candlestick first ; print_newline (); print_inner_lists' tail in print_inner_lists' candlestick_list;;
 ;;
 end
