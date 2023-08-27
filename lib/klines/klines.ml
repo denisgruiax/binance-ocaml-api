@@ -105,36 +105,36 @@ module Make(P : Parameters) : CandleStick = struct
 
   let get_candlesticks () = parse_kline_data (get_json_from_api_url endpoint);;
 
-  let get_open_times () = List.map (fun candlestick -> candlestick.open_time) (get_candlesticks ());;
-  let get_open_prices () = List.map (fun candlestick -> candlestick.open_price) (get_candlesticks ());;
-  let get_high_prices () = List.map (fun candlestick -> candlestick.high_price) (get_candlesticks ());;
-  let get_low_prices () = List.map (fun candlestick -> candlestick.low_price) (get_candlesticks ());;
-  let get_close_prices () = List.map (fun candlestick -> candlestick.close_price) (get_candlesticks ());;
-  let get_volumes () = List.map (fun candlestick -> candlestick.volume) (get_candlesticks ());;
-  let get_close_times () = List.map (fun candlestick -> candlestick.close_time) (get_candlesticks ());;
-  let get_quote_asset_volumes () = List.map (fun candlestick -> candlestick.quote_asset_volume) (get_candlesticks ());;
-  let get_number_of_trades () = List.map (fun candlestick -> candlestick.number_of_trades) (get_candlesticks ());;
-  let get_taker_buy_base_asset_volumes () = List.map (fun candlestick -> candlestick.taker_buy_base_asset_volume) (get_candlesticks ());;
-  let get_taker_buy_quote_asset_volumes () = List.map (fun candlestick -> candlestick.taker_buy_quote_asset_volume) (get_candlesticks ());;
+  let get_open_times () = List.(map (fun candlestick -> candlestick.open_time) (get_candlesticks ()) |> rev);;
+  let get_open_prices () = List.(map (fun candlestick -> candlestick.open_price) (get_candlesticks ()) |> rev);;
+  let get_high_prices () = List.(map (fun candlestick -> candlestick.high_price) (get_candlesticks ()) |> rev);;
+  let get_low_prices () = List.(map (fun candlestick -> candlestick.low_price) (get_candlesticks ()) |> rev);;
+  let get_close_prices () = List.(map (fun candlestick -> candlestick.close_price) (get_candlesticks ()) |> rev);;
+  let get_volumes () = List.(map (fun candlestick -> candlestick.volume) (get_candlesticks ()) |> rev);;
+  let get_close_times () = List.(map (fun candlestick -> candlestick.close_time) (get_candlesticks ()) |> rev);;
+  let get_quote_asset_volumes () = List.(map (fun candlestick -> candlestick.quote_asset_volume) (get_candlesticks ()) |> rev);;
+  let get_number_of_trades () = List.(map (fun candlestick -> candlestick.number_of_trades) (get_candlesticks ()) |> rev);;
+  let get_taker_buy_base_asset_volumes () = List.(map (fun candlestick -> candlestick.taker_buy_base_asset_volume) (get_candlesticks ()) |> rev);;
+  let get_taker_buy_quote_asset_volumes () = List.(map (fun candlestick -> candlestick.taker_buy_quote_asset_volume) (get_candlesticks ()) |> rev);;
 
-  let print_candlestick = function
-    |{
-      open_time;
-      open_price;
-      high_price;
-      low_price;
-      close_price;
-      volume;
-      close_time;
-      quote_asset_volume;
-      number_of_trades;
-      taker_buy_base_asset_volume;
-      taker_buy_quote_asset_volume
-    } -> Printf.printf "%i %0.2f %0.2f %0.2f %0.2f %0.2f %i %0.2f %i %0.2f %0.2f" open_time open_price high_price low_price close_price volume
-           close_time quote_asset_volume number_of_trades taker_buy_base_asset_volume taker_buy_quote_asset_volume
+let print_candlestick = function
+  |{
+    open_time;
+    open_price;
+    high_price;
+    low_price;
+    close_price;
+    volume;
+    close_time;
+    quote_asset_volume;
+    number_of_trades;
+    taker_buy_base_asset_volume;
+    taker_buy_quote_asset_volume
+  } -> Printf.printf "%i %0.2f %0.2f %0.2f %0.2f %0.2f %i %0.2f %i %0.2f %0.2f" open_time open_price high_price low_price close_price volume
+         close_time quote_asset_volume number_of_trades taker_buy_base_asset_volume taker_buy_quote_asset_volume
 
-  let print_candlesticks candlestick_list = let rec print_inner_lists' candlestick_list = match candlestick_list with
-      |[] -> ()
-      |l0::ln -> print_candlestick l0 ; print_newline (); print_inner_lists' ln in print_inner_lists' candlestick_list;;
-  ;;
+let print_candlesticks candlestick_list = let rec print_inner_lists' candlestick_list = match candlestick_list with
+    |[] -> ()
+    |l0::ln -> print_candlestick l0 ; print_newline (); print_inner_lists' ln in print_inner_lists' candlestick_list;;
+;;
 end
