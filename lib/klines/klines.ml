@@ -134,8 +134,5 @@ module Make(P : Parameters) : CandleStick = struct
     } -> Printf.printf "%i %0.2f %0.2f %0.2f %0.2f %0.2f %i %0.2f %i %0.2f %0.2f" open_time open_price high_price low_price close_price volume
            close_time quote_asset_volume number_of_trades taker_buy_base_asset_volume taker_buy_quote_asset_volume
 
-  let print_candlesticks candlestick_list = let rec print_inner_lists' candlestick_list = match candlestick_list with
-      |[] -> ()
-      |first::tail -> print_candlestick first ; print_newline (); print_inner_lists' tail in print_inner_lists' candlestick_list;;
-  ;;
+  let print_candlesticks candlesticks = List.iter print_candlestick candlesticks;;
 end
