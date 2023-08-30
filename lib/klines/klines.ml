@@ -1,9 +1,33 @@
 module type CandleStick = sig
-  type candlestick
+  type candlestick = {
+    open_time : int;
+    open_price : float;
+    high_price : float;
+    low_price : float;
+    close_price : float;
+    volume : float;
+    close_time : int;
+    quote_asset_volume : float;
+    number_of_trades : int;
+    taker_buy_base_asset_volume : float;
+    taker_buy_quote_asset_volume : float
+  }
+
   val endpoint : string
   val interval : string
   val get_candlesticks : unit -> candlestick list
-  val get_list_of_open_price : unit -> float list
+  val get_open_times : unit -> int list
+  val get_open_prices : unit -> float list
+  val get_high_prices : unit -> float list
+  val get_low_prices : unit -> float list
+  val get_close_prices : unit -> float list
+  val get_volumes : unit -> float list
+  val get_close_times : unit -> int list
+  val get_quote_asset_volumes : unit -> float list
+  val get_number_of_trades : unit -> int list
+  val get_taker_buy_base_asset_volumes : unit -> float list
+  val get_taker_buy_quote_asset_volumes : unit -> float list
+
   val print_candlesticks : candlestick list -> unit
 end;;
 
@@ -77,14 +101,22 @@ module Make(P : Parameters) : CandleStick = struct
 
   let parse_kline_data json  = let rec parse_kline_data' json acc = match json with
       |`A (`A head :: tail) -> parse_kline_data' (`A tail) ((get_data head) :: acc)
-      |_ -> acc in parse_kline_data' json [];;
+      |_ -> List.rev acc 
+    in parse_kline_data' json [];;
 
   let get_candlesticks () = parse_kline_data (get_json_from_api_url endpoint);;
 
-  let get_list_of_open_price () = let candlesticks = get_candlesticks () in
-    let rec get_list_of_open_price' candlesticks acc = match candlesticks with
-      |[] -> List.rev acc
-      |head::tail -> get_list_of_open_price' tail (head.open_price::acc) in get_list_of_open_price' candlesticks [];;
+  let get_open_times () = List.map (fun candlestick -> candlestick.open_time) (get_candlesticks ());;
+  let get_open_prices () = List.map (fun candlestick -> candlestick.open_price) (get_candlesticks ());;
+  let get_high_prices () = List.map (fun candlestick -> candlestick.high_price) (get_candlesticks ());;
+  let get_low_prices () = List.map (fun candlestick -> candlestick.low_price) (get_candlesticks ());;
+  let get_close_prices () = List.map (fun candlestick -> candlestick.close_price) (get_candlesticks ());;
+  let get_volumes () = List.map (fun candlestick -> candlestick.volume) (get_candlesticks ());;
+  let get_close_times () = List.map (fun candlestick -> candlestick.close_time) (get_candlesticks ());;
+  let get_quote_asset_volumes () = List.map (fun candlestick -> candlestick.quote_asset_volume) (get_candlesticks ());;
+  let get_number_of_trades () = List.map (fun candlestick -> candlestick.number_of_trades) (get_candlesticks ());;
+  let get_taker_buy_base_asset_volumes () = List.map (fun candlestick -> candlestick.taker_buy_base_asset_volume) (get_candlesticks ());;
+  let get_taker_buy_quote_asset_volumes () = List.map (fun candlestick -> candlestick.taker_buy_quote_asset_volume) (get_candlesticks ());;
 
   let print_candlestick = function
     |{
@@ -99,11 +131,8 @@ module Make(P : Parameters) : CandleStick = struct
       number_of_trades;
       taker_buy_base_asset_volume;
       taker_buy_quote_asset_volume
-    } -> Printf.printf "%i %0.2f %0.2f %0.2f %0.2f %0.2f %i %0.2f %i %0.2f %0.2f" open_time open_price high_price low_price close_price volume
+    } -> Printf.printf "%i %0.2f %0.2f %0.2f %0.2f %0.2f %i %0.2f %i %0.2f %0.2f\n" open_time open_price high_price low_price close_price volume
            close_time quote_asset_volume number_of_trades taker_buy_base_asset_volume taker_buy_quote_asset_volume
 
-  let print_candlesticks candlestick_list = let rec print_inner_lists' candlestick_list = match candlestick_list with
-      |[] -> ()
-      |l0::ln -> print_candlestick l0 ; print_newline (); print_inner_lists' ln in print_inner_lists' candlestick_list;;
-  ;;
+  let print_candlesticks candlesticks = List.iter print_candlestick candlesticks;;
 end
