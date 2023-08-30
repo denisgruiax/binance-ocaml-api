@@ -101,7 +101,7 @@ module Make(P : Parameters) : CandleStick = struct
 
   let parse_kline_data json  = let rec parse_kline_data' json acc = match json with
       |`A (`A head :: tail) -> parse_kline_data' (`A tail) ((get_data head) :: acc)
-      |_ -> acc 
+      |_ -> List.rev acc 
     in parse_kline_data' json [];;
 
   let get_candlesticks () = parse_kline_data (get_json_from_api_url endpoint);;
