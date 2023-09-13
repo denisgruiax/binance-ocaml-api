@@ -3,6 +3,7 @@ open Alcotest;;
 module BitcoinOrder' = struct
   let api_key = "YOUR_BINANCE_API_KEY"
   let secret_key = "YOUR_BINANCE_SECRET_KEY"
+  let url = "https://api.binance.com/api/v3/order"
   let symbol = "BTCUSDT"
   let side = "BUY"
   let order_type = "LIMIT"

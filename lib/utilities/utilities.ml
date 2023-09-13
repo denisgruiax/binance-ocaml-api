@@ -16,7 +16,7 @@ module BaseApis = struct
   let api4 = "https://api4.binance.com"
 end
 
-module type Endpoints=sig
+module type Urls=sig
   val agg_trades : string
   val avg_price : string
   val depth : string
@@ -32,7 +32,7 @@ module type Endpoints=sig
   val ui_klines : string
 end
 
-module EndApis = struct
+module Endpoints = struct
   let agg_trades = "/api/v3/aggTrades"
   let avg_price = "/api/v3/avgPrice"
   let depth = "/api/v3/depth"
@@ -48,18 +48,18 @@ module EndApis = struct
   let ui_klines = "/api/v3/uiKlines"
 end;;
 
-module Make (BaseApi : sig val api : string end):Endpoints = struct
-  let agg_trades = BaseApi.api ^ EndApis.agg_trades
-  let avg_price = BaseApi.api ^ EndApis.avg_price
-  let depth = BaseApi.api ^ EndApis.depth
-  let exchange_info = BaseApi.api ^ EndApis.exchange_info
-  let klines = BaseApi.api ^ EndApis.klines
-  let ping = BaseApi.api ^ EndApis.ping
-  let ticker = BaseApi.api ^ EndApis.ticker
-  let ticker_24hr = BaseApi.api ^ EndApis.ticker_24hr
-  let ticker_bookTicker = BaseApi.api ^ EndApis.ticker_bookTicker
-  let ticker_price = BaseApi.api ^ EndApis.ticker_price
-  let time = BaseApi.api ^ EndApis.time
-  let trades = BaseApi.api ^ EndApis.trades
-  let ui_klines = BaseApi.api ^ EndApis.ui_klines
+module Make (BaseApi : sig val api : string end):Urls = struct
+  let agg_trades = BaseApi.api ^ Endpoints.agg_trades
+  let avg_price = BaseApi.api ^ Endpoints.avg_price
+  let depth = BaseApi.api ^ Endpoints.depth
+  let exchange_info = BaseApi.api ^ Endpoints.exchange_info
+  let klines = BaseApi.api ^ Endpoints.klines
+  let ping = BaseApi.api ^ Endpoints.ping
+  let ticker = BaseApi.api ^ Endpoints.ticker
+  let ticker_24hr = BaseApi.api ^ Endpoints.ticker_24hr
+  let ticker_bookTicker = BaseApi.api ^ Endpoints.ticker_bookTicker
+  let ticker_price = BaseApi.api ^ Endpoints.ticker_price
+  let time = BaseApi.api ^ Endpoints.time
+  let trades = BaseApi.api ^ Endpoints.trades
+  let ui_klines = BaseApi.api ^ Endpoints.ui_klines
 end

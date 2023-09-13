@@ -5,6 +5,7 @@ end
 module type Parameters = sig
   val api_key : string
   val secret_key : string
+  val url : string
   val symbol : string
   val side : string
   val order_type : string
@@ -15,6 +16,8 @@ module type Parameters = sig
 end
 
 module Make(P : Parameters) : Order' = struct
+  let headers = Cohttp.Header.init_with "X-MBX-APIKEY" P.api_key;;
+
   let generate_hmac_sha256 payload secret_key =
     let hmac_key = Cstruct.of_string secret_key in
     let payload_cs = Cstruct.of_string payload in
@@ -34,14 +37,11 @@ module Make(P : Parameters) : Order' = struct
   let signature payload = let hmac = generate_hmac_sha256 payload (P.secret_key) in
     hex_encode hmac;;
 
-  let url = "https://api.binance.com/api/v3/order";;
-  let headers = Cohttp.Header.init_with "X-MBX-APIKEY" P.api_key;;
-  let uri () = let payload = make_payload (timestamp ()) in Uri.of_string (url ^ "?" ^ payload ^ "&signature=" ^ signature payload);;
-
+  let uri () = let payload = make_payload (timestamp ()) in Uri.of_string (P.url ^ "?" ^ payload ^ "&signature=" ^ signature payload);;
 
   let place_order () = let open Lwt.Infix in 
-    let lwt_string = Cohttp_lwt_unix.Client.post (uri ())  ~headers ~body:(Cohttp_lwt.Body.empty)
+    let result = Cohttp_lwt_unix.Client.post (uri ())  ~headers ~body:(Cohttp_lwt.Body.empty)
       >>= fun (_, body) ->
       Cohttp_lwt.Body.to_string body
-    in Lwt_main.run lwt_string;;
+    in Lwt_main.run result;;
 end
