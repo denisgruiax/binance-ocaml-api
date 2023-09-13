@@ -7,6 +7,7 @@ module type BaseApis' =
     val api3 : string
     val api4 : string
   end
+
 module BaseApis :
   sig
     val api_default : string
@@ -16,7 +17,8 @@ module BaseApis :
     val api3 : string
     val api4 : string
   end
-module type Endpoints =
+
+module type Urls =
   sig
     val agg_trades : string
     val avg_price : string
@@ -32,7 +34,8 @@ module type Endpoints =
     val trades : string
     val ui_klines : string
   end
-module EndApis :
+
+module Endpoints :
   sig
     val agg_trades : string
     val avg_price : string
@@ -48,4 +51,5 @@ module EndApis :
     val trades : string
     val ui_klines : string
   end
-module Make : functor (BaseApi : sig val api : string end) -> Endpoints
+
+module Make : functor (BaseApi : sig val api : string end) -> Urls

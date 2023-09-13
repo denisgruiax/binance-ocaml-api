@@ -4,12 +4,12 @@ module type Price' = sig
 end
 
 module type Parameters =  sig
-  val price_url: string
+  val url: string
   val symbol : string
 end
 
 module Make(P : Parameters) : Price' = struct
-  let endpoint = P.price_url ^ "?symbol=" ^ P.symbol;;
+  let endpoint = P.url ^ "?symbol=" ^ P.symbol;;
 
   let get_json_from_api_url endpoint = let ezjsonm =
                                          Lwt.bind

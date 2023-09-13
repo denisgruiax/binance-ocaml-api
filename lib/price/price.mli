@@ -3,7 +3,7 @@ module type Price' =
 end
 
 module type Parameters =  sig
-  val price_url: string
+  val url: string
   val symbol : string
 end
 

@@ -5,6 +5,7 @@ end
 module type Parameters = sig
   val api_key : string
   val secret_key : string
+  val url : string
   val symbol : string
   val side : string
   val order_type : string

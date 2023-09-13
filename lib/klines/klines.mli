@@ -32,7 +32,7 @@ module type CandleStick = sig
 end  
 
 module type Parameters = sig
-  val klines_url : string
+  val url : string
   val symbol : string
   val size : string
 end

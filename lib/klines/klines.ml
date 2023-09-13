@@ -32,7 +32,7 @@ module type CandleStick = sig
 end;;
 
 module type Parameters = sig
-  val klines_url : string
+  val url : string
   val symbol : string
   val size : string
 end
@@ -52,7 +52,7 @@ module Make(P : Parameters) : CandleStick = struct
     taker_buy_quote_asset_volume : float
   };;
 
-  let endpoint = P.klines_url ^ "?symbol=" ^ P.symbol ^ "&interval=" ^ P.size;;
+  let endpoint = P.url ^ "?symbol=" ^ P.symbol ^ "&interval=" ^ P.size;;
 
   let interval = P.size;;
 
