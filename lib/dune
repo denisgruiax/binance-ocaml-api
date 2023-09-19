@@ -3,4 +3,4 @@
 (library
  (name binance_ocaml_api)
  (public_name binance_ocaml_api)
- (libraries price klines order utilities))
+ (libraries market_data_endpoints spot_account utilities))

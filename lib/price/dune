@@ -1,5 +1,0 @@
-(library
- (name price)
- (public_name price)
- (libraries lwt lwt.unix conduit-lwt-unix ezjsonm cohttp cohttp-lwt cohttp-lwt-unix tls ssl)
- (flags (:standard -w -67)))

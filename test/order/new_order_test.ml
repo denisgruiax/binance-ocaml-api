@@ -1,4 +1,5 @@
 open Alcotest;;
+open Binance_ocaml_api.Spot_account;;
 
 module BitcoinOrder' = struct
   let api_key = "YOUR_BINANCE_API_KEY"
@@ -13,7 +14,7 @@ module BitcoinOrder' = struct
   let recv_window = "5000"
 end
 
-module BitcoinOrder = Order.Make(BitcoinOrder');; 
+module BitcoinOrder = New_order.Make(BitcoinOrder');; 
 
 let response = BitcoinOrder.place_order ();;
 
