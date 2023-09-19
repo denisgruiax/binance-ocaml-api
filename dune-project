@@ -42,7 +42,7 @@
  (depends ocaml dune))
 
 (package
- (name klines)
+ (name market_data_endpoints)
  (synopsis "Will be defined.")
  (description "Will be defined.")
  (depends ocaml dune))

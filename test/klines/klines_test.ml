@@ -1,4 +1,4 @@
-open Binance_ocaml_api
+open Binance_ocaml_api.Market_data_endpoints
 open Alcotest;;
 
 module Enpoints = Utilities.Make(struct let api = Utilities.BaseApis.api_default end);;
