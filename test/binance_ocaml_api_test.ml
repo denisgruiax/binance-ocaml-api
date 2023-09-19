@@ -5,7 +5,7 @@ let library_unit_testing () =
     Utilities_test.suite ();
     Price_test.suite ();
     Klines_test.suite ();
-    Order_test.suite ()
+    New_order_test.suite ()
   ];;
 
 library_unit_testing ();;
