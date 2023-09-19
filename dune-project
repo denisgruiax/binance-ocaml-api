@@ -30,12 +30,6 @@
  (depends ocaml dune))
 
 (package
- (name price)
- (synopsis "Will be defined.")
- (description "Will be defined.")
- (depends ocaml dune))
-
-(package
  (name spot_account)
  (synopsis "Will be defined.")
  (description "Will be defined.")
