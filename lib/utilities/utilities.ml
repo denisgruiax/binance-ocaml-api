@@ -1,3 +1,5 @@
+module Requests = Requests
+module Crypto = Crypto
 module type BaseApis' = sig
   val api_default : string
   val api_gcp : string

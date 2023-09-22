@@ -1,3 +1,4 @@
+open Utilities;;
 module type CandleStick = sig
   type candlestick = {
     open_time : int;
@@ -56,17 +57,6 @@ module Make(P : Parameters) : CandleStick = struct
 
   let interval = P.size;;
 
-  let get_json_from_api_url endpoint = 
-    let ezjsonm =
-      Lwt.bind
-        (Cohttp_lwt_unix.Client.get (Uri.of_string endpoint))
-        (fun (_, body) ->
-           Lwt.bind (Cohttp_lwt.Body.to_string body) (fun body_string ->
-               let json = Ezjsonm.from_string body_string in
-               Lwt.return json))
-    in
-    Lwt_main.run ezjsonm;;
-
   let get_data = function
     |[`Float open_time; `String open_price; `String high_price; `String low_price;
       `String close_price; `String volume; `Float close_time; `String quote_asset_volume;
@@ -104,7 +94,7 @@ module Make(P : Parameters) : CandleStick = struct
       |_ -> List.rev acc 
     in parse_kline_data' json [];;
 
-  let get_candlesticks () = parse_kline_data (get_json_from_api_url endpoint);;
+  let get_candlesticks () = parse_kline_data (Requests.get endpoint);;
 
   let get_open_times () = List.map (fun candlestick -> candlestick.open_time) (get_candlesticks ());;
   let get_open_prices () = List.map (fun candlestick -> candlestick.open_price) (get_candlesticks ());;

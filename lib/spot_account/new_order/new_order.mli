@@ -1,5 +1,5 @@
 module type Order' = sig
-  val place_order : unit -> string
+  val place_order : unit -> [> Ezjsonm.t]
 end
 
 module type Parameters = sig
