@@ -39,6 +39,15 @@ module type Parameters = sig
 end
 
 module Make(P : Parameters) : CandleStick = struct
+  let endpoint = "/api/v3/klines";;
+
+  let parameters = let open P in [
+      ("symbol", symbol);
+      ("interval", size);
+    ];;
+
+  let interval = P.size;;
+
   type candlestick = {
     open_time : int;
     open_price : float;
@@ -52,10 +61,6 @@ module Make(P : Parameters) : CandleStick = struct
     taker_buy_base_asset_volume : float;
     taker_buy_quote_asset_volume : float
   };;
-
-  let endpoint = P.url ^ "?symbol=" ^ P.symbol ^ "&interval=" ^ P.size;;
-
-  let interval = P.size;;
 
   let get_data = function
     |[`Float open_time; `String open_price; `String high_price; `String low_price;
@@ -94,7 +99,8 @@ module Make(P : Parameters) : CandleStick = struct
       |_ -> List.rev acc 
     in parse_kline_data' json [];;
 
-  let get_candlesticks () = parse_kline_data (Requests.get endpoint);;
+  let get_candlesticks () = let url = Url.build_public P.url endpoint parameters in 
+    print_endline url;parse_kline_data (Requests.get url);;
 
   let get_open_times () = List.map (fun candlestick -> candlestick.open_time) (get_candlesticks ());;
   let get_open_prices () = List.map (fun candlestick -> candlestick.open_price) (get_candlesticks ());;
