@@ -15,6 +15,7 @@
   cohttp-lwt
   cohttp-lwt-unix
   tls
-  ssl)
+  ssl
+  utilities)
  (flags
   (:standard -w -67-69-32)))
