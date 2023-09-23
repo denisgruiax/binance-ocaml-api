@@ -33,6 +33,6 @@ module Make(P : Parameters) : Order' = struct
     ];;
 
   let place_order () = 
-    let url_string = Url.build P.url endpoint parameters P.secret_key 
+    let url_string = Url.build_signed P.url endpoint parameters P.secret_key 
     in print_string url_string ; Requests.post (Uri.of_string url_string) (headers);;
 end
