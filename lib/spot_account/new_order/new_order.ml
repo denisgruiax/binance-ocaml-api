@@ -19,16 +19,20 @@ end
 
 module Make(P : Parameters) : Order' = struct
   let endpoint = "/api/v3/order";;
-
+  
   let headers = Requests.create_header P.api_key;;
 
-  let timestamp () = string_of_int(int_of_float ((Unix.gettimeofday ()) *. 1000.0));;
+  let parameters = let open P in [
+      ("symbol", symbol);
+      ("side", side);
+      ("type", order_type);
+      ("timeInForce", time_in_force);
+      ("quantity", quantity);
+      ("price", price);
+      ("recvWindow", recv_window);
+    ];;
 
-  let make_payload timestamp = let open P 
-  in Printf.sprintf "symbol=%s&side=%s&type=%s&timeInForce=%s&quantity=%s&price=%s&recvWindow=%s&timestamp=%s" symbol side order_type time_in_force quantity price recv_window timestamp;;
-
-  let uri () = let payload = make_payload (timestamp ()) 
-    in Uri.of_string (P.url ^ endpoint ^ "?" ^ payload ^ "&signature=" ^ Crypto.create_signature payload P.secret_key);;
-
-  let place_order () = Requests.post (uri ()) (headers);;
+  let place_order () = 
+    let url_string = Url.build P.url endpoint parameters P.secret_key 
+    in print_string url_string ; Requests.post (Uri.of_string url_string) (headers);;
 end
