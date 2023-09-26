@@ -1,4 +1,4 @@
-module type Order' = sig
+module type Order = sig
   val place_order : unit -> [> Ezjsonm.t]
 end
 
@@ -16,4 +16,4 @@ module type Parameters = sig
 end
 
 module Make :
-  functor (P : Parameters) -> Order'
+  functor (P : Parameters) -> Order

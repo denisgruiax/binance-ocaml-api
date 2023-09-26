@@ -1,6 +1,6 @@
 open Utilities;;
 
-module type Order' = sig
+module type Order = sig
   val place_order : unit -> [> Ezjsonm.t]
 end
 
@@ -17,7 +17,7 @@ module type Parameters = sig
   val recv_window : string
 end
 
-module Make(P : Parameters) : Order' = struct
+module Make(P : Parameters) : Order = struct
   let endpoint = "/api/v3/order";;
   
   let headers = Requests.create_header P.api_key;;

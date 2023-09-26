@@ -1,12 +1,12 @@
 open Alcotest;;
 open Utilities;;
 
-let api_default () = check string "api_default" BaseUrls.api_default "https://api.binance.com";;
-let api_gcp () = check string "api_gcp" BaseUrls.api_gcp "https://api-gcp.binance.com";;
-let api1 () = check string "api1" BaseUrls.api1 "https://api1.binance.com";;
-let api2 () = check string "api2" BaseUrls.api1 "https://api1.binance.com";;
-let api3 () = check string "api3" BaseUrls.api1 "https://api1.binance.com";;
-let api4 () = check string "api4" BaseUrls.api1 "https://api1.binance.com";;
+let api_default () = check string "api_default" Base_urls.api_default "https://api.binance.com";;
+let api_gcp () = check string "api_gcp" Base_urls.api_gcp "https://api-gcp.binance.com";;
+let api1 () = check string "api1" Base_urls.api1 "https://api1.binance.com";;
+let api2 () = check string "api2" Base_urls.api1 "https://api1.binance.com";;
+let api3 () = check string "api3" Base_urls.api1 "https://api1.binance.com";;
+let api4 () = check string "api4" Base_urls.api1 "https://api1.binance.com";;
 
 let suite () = "Enpoints", [
     test_case "api_default" `Quick api_default;
