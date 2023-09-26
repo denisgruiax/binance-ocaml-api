@@ -1,5 +1,5 @@
 open Utilities;;
-module type Price' = sig
+module type Price = sig
   val endpoint : string
   val get_price : unit -> float
 end
@@ -9,7 +9,7 @@ module type Parameters =  sig
   val symbol : string
 end
 
-module Make(P : Parameters) : Price' = struct
+module Make(P : Parameters) : Price = struct
   let endpoint = "/api/v3/ticker/price";;
 
   let parameters = let open P in [
