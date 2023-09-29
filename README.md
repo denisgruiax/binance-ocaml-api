@@ -30,23 +30,50 @@ Personally, I made use of WSL with Visual Studio Code, and most of time i used t
 
 ### Installation. 🪜
 1. Install opam and ocaml
-   ```sh
+```sh
    https://ocaml.org/docs/up-and-running
-   ```
+```
+
+3. Select the latest version of Ocaml
+```sh
+   opam switch create 5.0.0
+```
 
 2. Install OCAML packages
-   ```sh
-   opam install merlin ocp-ident lwt domainslib ezjsonm cohttp cohttp-lwt tls ssl
-   ```
+```sh
+   opam install merlin ocp-indent lwt domainslib ezjsonm cohttp cohttp-lwt cohttp-lwt-unix tls ssl alcotest alcotest-lwt nocrypto 
+```
    
 3. Configure Visual Studio Code to run OCaml code.
-   ```sh
+```sh
    Install OCaml extenions from VSCode marketplace.
-   ```
+```
    
-   ```sh
-   I had to change the setting "ocaml.merlinPath": "ocamlmerlin", in the OCaml VSCode extension settings to "ocaml.merlinPath": "ocamlmerlin-server", to get the extension to work.
-   ```
+```sh
+   I had to change the setting "ocaml.merlinPath": "ocamlmerlin" in the OCaml VSCode extension settings to "ocaml.merlinPath": "ocamlmerlin-server" to get the extension to work. (Maybe this is obsolete)
+```
+
+### Install the library
+1. Go inside the library
+```sh
+   cd ../binance-ocaml-api
+```
+
+2. Clean the library
+```sh
+   dune clean
+``` 
+
+3. Build the library
+```sh
+   dune build
+```
+
+4. Install the library in the local opam environment
+```sh
+   dune install
+   opam install .
+```
 
 ## Learning. 🌟
 **https://cs3110.github.io/textbook/cover.html**

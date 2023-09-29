@@ -1,4 +1,4 @@
-(lang dune 3.7)
+(lang dune 3.10)
 
 (name binance_ocaml_api)
 
@@ -18,27 +18,21 @@
 (package
  (name binance_ocaml_api)
  (synopsis "A lightweight OCaml library for interacting with the Binance API.")
- (description "A lightweight OCaml library for interacting with the Binance API.")
- (depends ocaml dune)
- (tags
-  (topics "to describe" your project)))
+ (depends ocaml dune))
 
 (package
  (name utilities)
  (synopsis "Will be defined.")
- (description "Will be defined.")
  (depends ocaml dune))
 
 (package
  (name spot_account)
  (synopsis "Will be defined.")
- (description "Will be defined.")
  (depends ocaml dune))
 
 (package
  (name market_data_endpoints)
  (synopsis "Will be defined.")
- (description "Will be defined.")
  (depends ocaml dune))
 
 ; See the complete stanza docs at https://dune.readthedocs.io/en/stable/dune-files.html#dune-project
