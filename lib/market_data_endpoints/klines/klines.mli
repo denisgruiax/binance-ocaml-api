@@ -15,18 +15,18 @@ module type CandleStick = sig
   
   val endpoint : string
   val interval : string
-  val get_candlesticks : unit -> candlestick list
-  val get_open_times : unit -> int list
-  val get_open_prices : unit -> float list
-  val get_high_prices : unit -> float list
-  val get_low_prices : unit -> float list
-  val get_close_prices : unit -> float list
-  val get_volumes : unit -> float list
-  val get_close_times : unit -> int list
-  val get_quote_asset_volumes : unit -> float list
-  val get_number_of_trades : unit -> int list
-  val get_taker_buy_base_asset_volumes : unit -> float list
-  val get_taker_buy_quote_asset_volumes : unit -> float list
+  val get_candlesticks : unit -> candlestick list Lwt.t
+  val get_open_times : unit -> int list Lwt.t
+  val get_open_prices : unit -> float list Lwt.t
+  val get_high_prices : unit -> float list Lwt.t
+  val get_low_prices : unit -> float list Lwt.t
+  val get_close_prices : unit -> float list Lwt.t
+  val get_volumes : unit -> float list Lwt.t
+  val get_close_times : unit -> int list Lwt.t
+  val get_quote_asset_volumes : unit -> float list Lwt.t
+  val get_number_of_trades : unit -> int list Lwt.t
+  val get_taker_buy_base_asset_volumes : unit -> float list Lwt.t
+  val get_taker_buy_quote_asset_volumes : unit -> float list Lwt.t
 
   val print_candlesticks : candlestick list -> unit
 end  
@@ -34,7 +34,7 @@ end
 module type Parameters = sig
   val url : string
   val symbol : string
-  val size : string
+  val interval : string
 end
 
 module Make : functor (P : Parameters) -> CandleStick
