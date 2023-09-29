@@ -22,17 +22,17 @@
 
 (package
  (name utilities)
- (synopsis "Will be defined.")
+ (synopsis "A module that hold multiple modules that help in code reuse, structure the code in a modular way and write others auxiliar functions.")
  (depends ocaml dune))
 
 (package
  (name spot_account)
- (synopsis "Will be defined.")
+ (synopsis "Contains modules for interacting with the spot wallet of a Binance account.")
  (depends ocaml dune))
 
 (package
  (name market_data_endpoints)
- (synopsis "Will be defined.")
+ (synopsis "Contains modules for getting data from the Binance market like price of a pair or a list of candlesticks.")
  (depends ocaml dune))
 
 ; See the complete stanza docs at https://dune.readthedocs.io/en/stable/dune-files.html#dune-project
