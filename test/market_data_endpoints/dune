@@ -1,3 +1,3 @@
 (library
  (name market_data_endpoints_test)
- (libraries binance_ocaml_api alcotest klines_test symbol_price_ticker_test))
+ (libraries binance_ocaml_api alcotest klines_test symbol_price_ticker_test test_connectivity_test))

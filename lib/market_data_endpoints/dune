@@ -3,7 +3,7 @@
 (library
  (name market_data_endpoints)
  (public_name market_data_endpoints)
- (modules market_data_endpoints klines symbol_price_ticker)
+ (modules market_data_endpoints klines symbol_price_ticker test_connectivity)
  (libraries
   lwt
   lwt.unix

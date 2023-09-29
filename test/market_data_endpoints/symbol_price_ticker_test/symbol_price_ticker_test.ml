@@ -11,4 +11,4 @@ let test_bitcoin_price switch () =
 
 let suite () = "Symbol price ticker", [
     Alcotest_lwt.test_case "Get bitcoin price." `Quick test_bitcoin_price
-  ];; 
+  ];;
