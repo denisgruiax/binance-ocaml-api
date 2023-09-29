@@ -1,5 +1,5 @@
 module type Order = sig
-  val place_order : unit -> [> Ezjsonm.t]
+  val place_order : unit -> [> Ezjsonm.t] Lwt.t
 end
 
 module type Parameters = sig

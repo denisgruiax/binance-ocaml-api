@@ -1,6 +1,6 @@
 module type Price = sig 
   val endpoint : string 
-  val get_price : unit -> float
+  val get_price : unit -> float Lwt.t
 end
 
 module type Parameters =  sig

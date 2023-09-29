@@ -16,18 +16,18 @@ module type CandleStick = sig
 
   val endpoint : string
   val interval : string
-  val get_candlesticks : unit -> candlestick list
-  val get_open_times : unit -> int list
-  val get_open_prices : unit -> float list
-  val get_high_prices : unit -> float list
-  val get_low_prices : unit -> float list
-  val get_close_prices : unit -> float list
-  val get_volumes : unit -> float list
-  val get_close_times : unit -> int list
-  val get_quote_asset_volumes : unit -> float list
-  val get_number_of_trades : unit -> int list
-  val get_taker_buy_base_asset_volumes : unit -> float list
-  val get_taker_buy_quote_asset_volumes : unit -> float list
+  val get_candlesticks : unit -> candlestick list Lwt.t
+  val get_open_times : unit -> int list Lwt.t
+  val get_open_prices : unit -> float list Lwt.t
+  val get_high_prices : unit -> float list Lwt.t
+  val get_low_prices : unit -> float list Lwt.t
+  val get_close_prices : unit -> float list Lwt.t
+  val get_volumes : unit -> float list Lwt.t
+  val get_close_times : unit -> int list Lwt.t
+  val get_quote_asset_volumes : unit -> float list Lwt.t
+  val get_number_of_trades : unit -> int list Lwt.t
+  val get_taker_buy_base_asset_volumes : unit -> float list Lwt.t
+  val get_taker_buy_quote_asset_volumes : unit -> float list Lwt.t
 
   val print_candlesticks : candlestick list -> unit
 end;;
@@ -35,7 +35,7 @@ end;;
 module type Parameters = sig
   val url : string
   val symbol : string
-  val size : string
+  val interval : string
 end
 
 module Make(P : Parameters) : CandleStick = struct
@@ -43,10 +43,10 @@ module Make(P : Parameters) : CandleStick = struct
 
   let parameters = let open P in [
       ("symbol", symbol);
-      ("interval", size);
+      ("interval", interval);
     ];;
 
-  let interval = P.size;;
+  let interval = P.interval;;
 
   type candlestick = {
     open_time : int;
@@ -99,20 +99,27 @@ module Make(P : Parameters) : CandleStick = struct
       |_ -> List.rev acc 
     in parse_kline_data' json [];;
 
-  let get_candlesticks () = let url = Url.build_public P.url endpoint parameters in 
-    print_endline url;parse_kline_data (Requests.get url);;
+  open Lwt.Infix;;
 
-  let get_open_times () = List.map (fun candlestick -> candlestick.open_time) (get_candlesticks ());;
-  let get_open_prices () = List.map (fun candlestick -> candlestick.open_price) (get_candlesticks ());;
-  let get_high_prices () = List.map (fun candlestick -> candlestick.high_price) (get_candlesticks ());;
-  let get_low_prices () = List.map (fun candlestick -> candlestick.low_price) (get_candlesticks ());;
-  let get_close_prices () = List.map (fun candlestick -> candlestick.close_price) (get_candlesticks ());;
-  let get_volumes () = List.map (fun candlestick -> candlestick.volume) (get_candlesticks ());;
-  let get_close_times () = List.map (fun candlestick -> candlestick.close_time) (get_candlesticks ());;
-  let get_quote_asset_volumes () = List.map (fun candlestick -> candlestick.quote_asset_volume) (get_candlesticks ());;
-  let get_number_of_trades () = List.map (fun candlestick -> candlestick.number_of_trades) (get_candlesticks ());;
-  let get_taker_buy_base_asset_volumes () = List.map (fun candlestick -> candlestick.taker_buy_base_asset_volume) (get_candlesticks ());;
-  let get_taker_buy_quote_asset_volumes () = List.map (fun candlestick -> candlestick.taker_buy_quote_asset_volume) (get_candlesticks ());;
+  let parse_kline_data2 json = 
+    json >>= fun json' -> Lwt.return (parse_kline_data json')
+  ;;
+  let get_candlesticks () = let url = Url.build_public P.url endpoint parameters 
+    in parse_kline_data2 (Requests.get url);;
+
+  open Lwt.Infix;;
+
+  let get_open_times () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_s (fun candlestick -> Lwt.return (candlestick.open_time)) candlesticks;;
+  let get_open_prices () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_s (fun candlestick -> Lwt.return (candlestick.open_price)) candlesticks;;
+  let get_high_prices () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_s (fun candlestick -> Lwt.return (candlestick.high_price)) candlesticks;;
+  let get_low_prices () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_s (fun candlestick -> Lwt.return (candlestick.low_price)) candlesticks;;
+  let get_close_prices () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_s (fun candlestick -> Lwt.return (candlestick.close_price)) candlesticks;;
+  let get_volumes () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_s (fun candlestick -> Lwt.return (candlestick.volume)) candlesticks;;
+  let get_close_times () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_s (fun candlestick -> Lwt.return (candlestick.close_time)) candlesticks;;
+  let get_quote_asset_volumes () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_s (fun candlestick -> Lwt.return (candlestick.quote_asset_volume)) candlesticks;;
+  let get_number_of_trades () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_s (fun candlestick -> Lwt.return (candlestick.number_of_trades)) candlesticks;;
+  let get_taker_buy_base_asset_volumes () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_s (fun candlestick -> Lwt.return (candlestick.taker_buy_base_asset_volume)) candlesticks;;
+  let get_taker_buy_quote_asset_volumes () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_s (fun candlestick -> Lwt.return (candlestick.taker_buy_quote_asset_volume)) candlesticks;;
 
   let print_candlestick = function
     |{
