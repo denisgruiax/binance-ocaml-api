@@ -19,9 +19,7 @@ module Make(P : Parameters) : Price = struct
   let json_to_float json = 
     let price_string = Ezjsonm.(get_string (find json ["price"])) in float_of_string price_string;;
 
-  open Lwt.Infix;;
-
-  let get_price_from_json json = 
+  let get_price_from_json json = let open Lwt.Infix in
     json >>= fun json' -> Lwt.return (Ezjsonm.(get_string (find json' ["price"])))
     >>= fun price_string -> Lwt.return (float_of_string price_string);;
 

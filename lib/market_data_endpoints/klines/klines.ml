@@ -1,4 +1,5 @@
 open Utilities;;
+open Lwt.Infix;;
 module type CandleStick = sig
   type candlestick = {
     open_time : int;
@@ -94,32 +95,28 @@ module Make(P : Parameters) : CandleStick = struct
         taker_buy_quote_asset_volume = 0.0
       };; 
 
-  let parse_kline_data json  = let rec parse_kline_data' json acc = match json with
+  let parse_kline_data_aux json  = let rec parse_kline_data' json acc = match json with
       |`A (`A head :: tail) -> parse_kline_data' (`A tail) ((get_data head) :: acc)
       |_ -> List.rev acc 
     in parse_kline_data' json [];;
 
-  open Lwt.Infix;;
+  let parse_kline_data json = 
+    json >>= fun json' -> Lwt.return (parse_kline_data_aux json');;
 
-  let parse_kline_data2 json = 
-    json >>= fun json' -> Lwt.return (parse_kline_data json')
-  ;;
   let get_candlesticks () = let url = Url.build_public P.url endpoint parameters 
-    in parse_kline_data2 (Requests.get url);;
+    in parse_kline_data (Requests.get url);;
 
-  open Lwt.Infix;;
-
-  let get_open_times () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_s (fun candlestick -> Lwt.return (candlestick.open_time)) candlesticks;;
-  let get_open_prices () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_s (fun candlestick -> Lwt.return (candlestick.open_price)) candlesticks;;
-  let get_high_prices () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_s (fun candlestick -> Lwt.return (candlestick.high_price)) candlesticks;;
-  let get_low_prices () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_s (fun candlestick -> Lwt.return (candlestick.low_price)) candlesticks;;
-  let get_close_prices () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_s (fun candlestick -> Lwt.return (candlestick.close_price)) candlesticks;;
-  let get_volumes () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_s (fun candlestick -> Lwt.return (candlestick.volume)) candlesticks;;
-  let get_close_times () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_s (fun candlestick -> Lwt.return (candlestick.close_time)) candlesticks;;
-  let get_quote_asset_volumes () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_s (fun candlestick -> Lwt.return (candlestick.quote_asset_volume)) candlesticks;;
-  let get_number_of_trades () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_s (fun candlestick -> Lwt.return (candlestick.number_of_trades)) candlesticks;;
-  let get_taker_buy_base_asset_volumes () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_s (fun candlestick -> Lwt.return (candlestick.taker_buy_base_asset_volume)) candlesticks;;
-  let get_taker_buy_quote_asset_volumes () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_s (fun candlestick -> Lwt.return (candlestick.taker_buy_quote_asset_volume)) candlesticks;;
+  let get_open_times () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_p (fun candlestick -> Lwt.return (candlestick.open_time)) candlesticks;;
+  let get_open_prices () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_p (fun candlestick -> Lwt.return (candlestick.open_price)) candlesticks;;
+  let get_high_prices () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_p (fun candlestick -> Lwt.return (candlestick.high_price)) candlesticks;;
+  let get_low_prices () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_p (fun candlestick -> Lwt.return (candlestick.low_price)) candlesticks;;
+  let get_close_prices () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_p (fun candlestick -> Lwt.return (candlestick.close_price)) candlesticks;;
+  let get_volumes () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_p (fun candlestick -> Lwt.return (candlestick.volume)) candlesticks;;
+  let get_close_times () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_p (fun candlestick -> Lwt.return (candlestick.close_time)) candlesticks;;
+  let get_quote_asset_volumes () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_p (fun candlestick -> Lwt.return (candlestick.quote_asset_volume)) candlesticks;;
+  let get_number_of_trades () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_p (fun candlestick -> Lwt.return (candlestick.number_of_trades)) candlesticks;;
+  let get_taker_buy_base_asset_volumes () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_p (fun candlestick -> Lwt.return (candlestick.taker_buy_base_asset_volume)) candlesticks;;
+  let get_taker_buy_quote_asset_volumes () = get_candlesticks () >>= fun candlesticks -> Lwt_list.map_p (fun candlestick -> Lwt.return (candlestick.taker_buy_quote_asset_volume)) candlesticks;;
 
   let print_candlestick = function
     |{
