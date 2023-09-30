@@ -1,9 +1,14 @@
 let timestamp () = string_of_int(int_of_float ((Unix.gettimeofday ()) *. 1000.0));;
 
+let check_value value = match value with
+  |"0" -> false
+  |"" -> false
+  |_ -> true;;
+
 let create_payload = function
   |[] -> ""
   |[(key, value)] -> "?" ^ key ^ "=" ^ value
-  |(key, value) :: tail -> "?" ^ key ^ "=" ^ value ^ List.fold_right (fun (key, value) res -> "&" ^ key ^ "=" ^ value ^ res) tail "";;
+  |(key, value) :: tail -> "?" ^ key ^ "=" ^ value ^ List.fold_right (fun (key, value) res -> if check_value value then ("&" ^ key ^ "=" ^ value ^ res) else res) tail "";;
 
 let build_public url endpoint parameters_with_keys =
   let payload = create_payload parameters_with_keys  

@@ -1,5 +1,14 @@
 open Utilities;;
 open Lwt.Infix;;
+
+module type Parameters = sig
+  val url : string
+  val symbol : string
+  val interval : string
+  val startTime : int
+  val endTime : int
+  val limit : int
+end
 module type CandleStick = sig
   type candlestick = {
     open_time : int;
@@ -33,18 +42,15 @@ module type CandleStick = sig
   val print_candlesticks : candlestick list -> unit
 end;;
 
-module type Parameters = sig
-  val url : string
-  val symbol : string
-  val interval : string
-end
-
 module Make(P : Parameters) : CandleStick = struct
   let endpoint = "/api/v3/klines";;
 
   let parameters = let open P in [
       ("symbol", symbol);
       ("interval", interval);
+      ("startTime", string_of_int startTime);
+      ("endTime", string_of_int endTime);
+      ("limit", string_of_int(Url.check_limit 1 1000 500 limit))
     ];;
 
   let interval = P.interval;;

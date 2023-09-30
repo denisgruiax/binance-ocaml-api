@@ -2,12 +2,35 @@ open Binance_ocaml_api.Market_data_endpoints
 open Utilities;;
 open Lwt.Syntax;;
 
-module BitcoinCandlesticks = Klines.Make(struct let url = Base_urls.api_default let symbol = "BTCUSDT" let interval = "5m" end);;
-module MultiversXCandlesticks = Klines.Make(struct let url = Base_urls.api_default let symbol = "EGLDUSDT" let interval = "5m" end);;
-module PolkadotCandlesticks = Klines.Make(struct let url = Base_urls.api_default let symbol = "DOTUSDT" let interval = "5m" end);; 
+module BitcoinCandlesticks = Klines.Make(struct 
+    let url = Base_urls.api_default 
+    let symbol = "BTCUSDT" 
+    let interval = "5m"
+    let startTime = 0
+    let endTime = 0
+    let limit = 100
+  end);;
+
+module MultiversXCandlesticks = Klines.Make(struct 
+    let url = Base_urls.api_default
+    let symbol = "EGLDUSDT"
+    let interval = "1h"
+    let startTime = 0
+    let endTime = 0
+    let limit = 500
+  end);;
+
+module PolkadotCandlesticks = Klines.Make(struct
+    let url = Base_urls.api_default
+    let symbol = "DOTUSDT"
+    let interval = "4h"
+    let startTime = 0
+    let endTime = 0
+    let limit  = 1000  
+end);; 
 
 let bitcoin_candlesticks_size () = let* candlesticks = BitcoinCandlesticks.get_candlesticks ()
-  in Alcotest.(check int "Bitcoin number of candlesticks.") 500 (List.length candlesticks);
+  in Alcotest.(check int "Bitcoin number of candlesticks.") 100 (List.length candlesticks);
   Lwt.return ();;
 
 let test_bitcoin_candlesticks_size switch () =
@@ -21,7 +44,7 @@ let test_multiversx_candlesticks_size switch () =
   Lwt_switch.add_hook (Some switch) multiversx_candlesticks_size;Lwt.return ();;
 
 let polkadot_candlesticks_size () =  let* candlesticks = PolkadotCandlesticks.get_candlesticks ()
-  in Alcotest.(check int "Polkadot number of candlesticks.") 500 (List.length candlesticks);
+  in Alcotest.(check int "Polkadot number of candlesticks.") 1000 (List.length candlesticks);
   Lwt.return ();;
 
 let test_polkadot_candlesticks_size switch () =

@@ -1,3 +1,12 @@
+module type Parameters = sig
+  val url : string
+  val symbol : string
+  val interval : string
+  val startTime : int
+  val endTime : int
+  val limit : int
+end
+
 module type CandleStick = sig
   type candlestick = {
     open_time : int;
@@ -30,11 +39,5 @@ module type CandleStick = sig
 
   val print_candlesticks : candlestick list -> unit
 end  
-
-module type Parameters = sig
-  val url : string
-  val symbol : string
-  val interval : string
-end
 
 module Make : functor (P : Parameters) -> CandleStick
