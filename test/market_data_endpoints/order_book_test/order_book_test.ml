@@ -12,7 +12,7 @@ let check_pair (x, y) = match (x > 0.0, y > 0.0) with
   |true, true -> true
   |_ -> false;;
 
-let check_list value = List.fold_left (fun res elt -> (check_pair elt) && res) true value;;
+let check_list list_of_orders = List.fold_left (fun res elt -> (check_pair elt) && res) true list_of_orders;;
 
 let check_depth = let open Order_book' in function
     |{lastUpdateId = val1; 

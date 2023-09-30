@@ -6,7 +6,9 @@
  (modules
   market_data_endpoints
   klines
+  old_trade_lookup
   order_book
+  recent_trade_list
   server_time
   symbol_price_ticker
   test_connectivity)
