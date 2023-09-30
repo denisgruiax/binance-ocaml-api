@@ -12,3 +12,7 @@ let build_public url endpoint parameters_with_keys =
 let build_signed url endpoint parameters_with_keys secret_key = 
   let payload = create_payload parameters_with_keys 
   in url ^ endpoint ^ payload ^ "&timestamp=" ^ (timestamp ()) ^"&signature=" ^ (Crypto.create_signature payload secret_key)
+
+let check_limit minimum maximum default= function
+  |limit when limit >= minimum && limit <= maximum -> limit
+  |_-> default;;

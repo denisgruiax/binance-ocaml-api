@@ -5,6 +5,7 @@
   alcotest
   alcotest-lwt
   klines_test
+  order_book_test
   server_time_test
   symbol_price_ticker_test
   test_connectivity_test))

@@ -11,5 +11,5 @@ let test_server_time switch () =
   Lwt_switch.add_hook (Some switch) get_server_time; Lwt.return ();;
 
 let suite () = "Server time", [
-    Alcotest_lwt.test_case "Test server time" `Quick test_server_time
+    Alcotest_lwt.test_case "Test server time." `Quick test_server_time
   ]

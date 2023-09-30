@@ -6,6 +6,7 @@
  (modules
   market_data_endpoints
   klines
+  order_book
   server_time
   symbol_price_ticker
   test_connectivity)
