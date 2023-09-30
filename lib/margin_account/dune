@@ -7,7 +7,8 @@
   margin_account
   cross_margin_account_transfer
   margin_account_borrow
-  margin_account_repay)
+  margin_account_repay
+  new_order)
  (libraries
   lwt
   lwt.unix
