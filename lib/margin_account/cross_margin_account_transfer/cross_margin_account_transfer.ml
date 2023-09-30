@@ -17,7 +17,7 @@ end
 
 module Make(P : Parameters) : Cross_margin_account_transfer' = struct
   let parameters = let open P in [
-      ("symbol", asset);
+      ("asset", asset);
       ("amount", string_of_int amount);
       ("type", string_of_int type_of_transfer);
       ("recvWindows", string_of_int recvWindow)
