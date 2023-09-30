@@ -12,20 +12,20 @@ module type Parameters = sig
   val recvWindow : int
 end
 
-module type Margin_account_borrow' = sig
+module type Margin_account_repay' = sig
   val make_borrow : unit -> int Lwt.t
 end
 
-module Make(P : Parameters) : Margin_account_borrow' = struct
+module Make(P : Parameters) : Margin_account_repay' = struct
   let parameters = let open P in [
       ("asset", asset);
       ("isIsolated", isIsolated);
       ("symbol", symbol);
       ("amount", string_of_int amount);
-      ("recvWindows", string_of_int recvWindow)
+      ("recvWindow", string_of_int recvWindow)
     ];;
 
-  let endpoint = Url.build_signed P.url "/sapi/v1/margin/loan" parameters P.secret_key;;
+  let endpoint = Url.build_signed P.url "/sapi/v1/margin/repay" parameters P.secret_key;;
 
   let headers = Requests.create_header P.api_key;;
 
