@@ -30,5 +30,5 @@ let test_get_recent_trade_list switch () =
   Lwt_switch.add_hook (Some switch) get_recent_trade_list;Lwt.return ();;
 
 let suite () = "Recent trade list",[
-    Alcotest_lwt.test_case "Tes recent trade list." `Quick test_get_recent_trade_list
+    Alcotest_lwt.test_case "Test recent trade list." `Quick test_get_recent_trade_list
 ]

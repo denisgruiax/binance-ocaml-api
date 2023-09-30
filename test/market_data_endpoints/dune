@@ -4,6 +4,7 @@
   binance_ocaml_api
   alcotest
   alcotest-lwt
+  current_average_price_test
   klines_test
   older_trade_lookup_test
   order_book_test

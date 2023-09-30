@@ -1,3 +1,4 @@
+module Current_average_price = Current_average_price
 module Klines = Klines
 module Old_trade_lookup = Old_trade_lookup
 module Order_book = Order_book

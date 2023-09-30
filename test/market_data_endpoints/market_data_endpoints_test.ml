@@ -1,3 +1,4 @@
+module Current_average_price_test = Current_average_price_test
 module Klines_test = Klines_test
 module Older_trade_lookup_test = Older_trade_lookup_test
 module Order_book_test = Order_book_test
