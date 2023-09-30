@@ -25,7 +25,7 @@ module Make(P : Parameters) : Margin_account_borrow' = struct
       ("recvWindows", string_of_int recvWindow)
     ];;
 
-  let endpoint = Url.build_signed P.url "/sapi/v1/margin/transfer" parameters P.secret_key;;
+  let endpoint = Url.build_signed P.url "/sapi/v1/margin/loan" parameters P.secret_key;;
 
   let headers = Requests.create_header P.api_key;;
 
