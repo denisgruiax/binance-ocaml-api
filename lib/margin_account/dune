@@ -3,7 +3,7 @@
 (library
  (name margin_account)
  (public_name margin_account)
- (modules margin_account cross_margin_account_transfer)
+ (modules margin_account cross_margin_account_transfer margin_account_borrow)
  (libraries
   lwt
   lwt.unix
