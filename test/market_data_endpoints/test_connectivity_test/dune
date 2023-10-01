@@ -1,0 +1,3 @@
+(library
+ (name test_connectivity_test)
+ (libraries binance_ocaml_api alcotest alcotest-lwt))
