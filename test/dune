@@ -3,6 +3,7 @@
  (libraries
   alcotest
   alcotest-lwt
-  utilities_test
+  margin_account_test
   market_data_endpoints_test
-  spot_account_test))
+  spot_account_test
+  utilities_test))

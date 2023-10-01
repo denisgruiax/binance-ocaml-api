@@ -1,0 +1,24 @@
+(include_subdirs unqualified)
+
+(library
+ (name margin_account)
+ (public_name margin_account)
+ (modules
+  margin_account
+  cross_margin_account_transfer
+  margin_account_borrow
+  margin_account_repay
+  new_order)
+ (libraries
+  lwt
+  lwt.unix
+  conduit-lwt-unix
+  ezjsonm
+  cohttp
+  cohttp-lwt
+  cohttp-lwt-unix
+  tls
+  ssl
+  utilities)
+ (flags
+  (:standard -w -67-69-32)))

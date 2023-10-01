@@ -1,0 +1,7 @@
+(library
+ (name margin_account_test)
+ (libraries
+  binance_ocaml_api
+  alcotest
+  alcotest-lwt
+  cross_margin_account_transfer_test))
