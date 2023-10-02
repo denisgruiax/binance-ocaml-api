@@ -1,7 +1,7 @@
-type order_status = NEW | PARTIALLY_FILLED | FILLED
+type t = NEW | PARTIALLY_FILLED | FILLED
                   | CANCELED | PENDING_CANCEL | REJECTED | EXPIRED | EXPIRED_IN_MATCH;;
 
-let wrap_order_status = function
+let wrap = function
     NEW -> "NEW" 
   | PARTIALLY_FILLED -> "PARTIALY_FILLED" 
   | FILLED -> "FILLED"
@@ -11,7 +11,7 @@ let wrap_order_status = function
   | EXPIRED -> "EXPIRED"
   | EXPIRED_IN_MATCH -> "EXPIRED_IN_MATCH"
 
-let wrap_order_status = function
+let unwrap = function
     "NEW" -> NEW 
   | "PARTIALLY_FILLED" -> PARTIALLY_FILLED 
   | "FILLED" -> FILLED

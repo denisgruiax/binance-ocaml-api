@@ -1,7 +1,7 @@
-type symbol_status = PRE_TRADING | TRADING | POST_TRADING | END_OF_DAY 
+type t = PRE_TRADING | TRADING | POST_TRADING | END_OF_DAY 
                    | HALT | AUCTION_MATCH | BREAK;;
 
-let wrap_symbol_status = function
+let wrap = function
   |PRE_TRADING -> "PRE_TRADING"
   |TRADING -> "TRADING"
   |POST_TRADING -> "POST_TRADING"
@@ -10,7 +10,7 @@ let wrap_symbol_status = function
   |AUCTION_MATCH -> "AUCTION_MATCH"
   |BREAK -> "BREAK";;
 
-let unwrap_symbol_status = function
+let unwrap = function
   |"PRE_TRADING" -> PRE_TRADING
   |"TRADING" -> TRADING
   |"POST_TRADING" -> POST_TRADING
