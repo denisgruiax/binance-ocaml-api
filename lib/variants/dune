@@ -1,0 +1,24 @@
+(include_subdirs unqualified)
+
+(library
+ (name variants)
+ (public_name variants)
+ (modules
+  variants
+  account_symbol_permissions
+  allocation_type
+  chart_interval
+  contingency_type
+  oco_order_status
+  oco_status
+  order_response
+  order_status
+  order_types
+  rate_limit_interval
+  rate_limiters_type
+  symbol_status
+  time_in_force
+  working_floor)
+ (libraries)
+ (flags
+  (:standard -w -34-37-67)))

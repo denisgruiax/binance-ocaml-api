@@ -44,4 +44,9 @@
   "A module that hold multiple modules that help in code reuse, structure the code in a modular way and write others auxiliar functions.")
  (depends ocaml dune))
 
+(package
+ (name variants)
+ (synopsis
+  "A module that hold multiple enums used by Binance and and implemented with variant data types.")
+ (depends ocaml dune))
 ; See the complete stanza docs at https://dune.readthedocs.io/en/stable/dune-files.html#dune-project
