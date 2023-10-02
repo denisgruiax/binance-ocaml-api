@@ -1,0 +1,9 @@
+(include_subdirs unqualified)
+
+(library
+ (name variants)
+ (public_name variants)
+ (modules variants account_symbol_permissions order_status symbol_status)
+ (libraries)
+ (flags
+  (:standard -w -34-37-67)))

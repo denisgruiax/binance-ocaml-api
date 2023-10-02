@@ -1,0 +1,23 @@
+type order_status = NEW | PARTIALLY_FILLED | FILLED
+                  | CANCELED | PENDING_CANCEL | REJECTED | EXPIRED | EXPIRED_IN_MATCH;;
+
+let wrap_order_status = function
+    NEW -> "NEW" 
+  | PARTIALLY_FILLED -> "PARTIALY_FILLED" 
+  | FILLED -> "FILLED"
+  | CANCELED -> "CANCELED"
+  | PENDING_CANCEL -> "PENDING_CANCEL"
+  | REJECTED -> "REJECTED"
+  | EXPIRED -> "EXPIRED"
+  | EXPIRED_IN_MATCH -> "EXPIRED_IN_MATCH"
+
+let wrap_order_status = function
+    "NEW" -> NEW 
+  | "PARTIALLY_FILLED" -> PARTIALLY_FILLED 
+  | "FILLED" -> FILLED
+  | "CANCELED" -> CANCELED
+  | "PENDING_CANCEL" -> PENDING_CANCEL
+  | "REJECTED" -> REJECTED
+  | "EXPIRED" -> EXPIRED
+  | "EXPIRED_IN_MATCH" -> EXPIRED_IN_MATCH
+  |_ -> raise Not_found
