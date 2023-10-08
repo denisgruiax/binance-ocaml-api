@@ -4,7 +4,7 @@ let wrap = function
   |BUY -> "BUY"
   |SELL -> "SELL";;
 
-let wrap = function
+let unwrap = function
   |"BUY" -> BUY
   |"SELL" -> SELL
   |_ -> raise Not_found;;
