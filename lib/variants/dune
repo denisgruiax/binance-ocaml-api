@@ -20,6 +20,7 @@
   symbol
   symbol_status
   time_in_force
+  wallet_transfer_direction
   working_floor)
  (libraries)
  (flags

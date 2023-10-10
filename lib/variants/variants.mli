@@ -13,4 +13,5 @@ module Rate_limiters_type = Rate_limiters_type
 module Symbol = Symbol
 module Symbol_status = Symbol_status
 module Time_in_force = Time_in_force
+module Wallet_transfer_direction = Wallet_transfer_direction
 module Working_floor = Working_floor

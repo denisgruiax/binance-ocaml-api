@@ -1,10 +1,12 @@
+open Variants
+
 module type Parameters = sig
   val url : string
   val api_key : string
   val secret_key : string 
-  val asset : string
-  val amount : int
-  val type_of_transfer : int
+  val asset : Symbol.t
+  val amount : float
+  val type_of_transfer : Wallet_transfer_direction.t
   val recvWindow : int
 end
 
