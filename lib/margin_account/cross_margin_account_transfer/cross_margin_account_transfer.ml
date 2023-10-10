@@ -9,7 +9,7 @@ module type Parameters = sig
   val asset : Symbol.t
   val amount : float
   val type_of_transfer : Wallet_transfer_direction.t
-  val recvWindow : int
+  val recv_window : int
 end
 
 module type Cross_margin_account_transfer' = sig
@@ -21,7 +21,7 @@ module Make(P : Parameters) : Cross_margin_account_transfer' = struct
       ("asset", Symbol.wrap asset);
       ("amount", string_of_float amount);
       ("type", Wallet_transfer_direction.wrap type_of_transfer);
-      ("recvWindows", string_of_int recvWindow)
+      ("recvWindows", string_of_int recv_window)
     ];;
 
   let endpoint = Url.build_signed P.url "/sapi/v1/margin/transfer" parameters P.secret_key;;

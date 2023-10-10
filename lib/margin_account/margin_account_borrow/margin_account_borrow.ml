@@ -9,7 +9,7 @@ module type Parameters = sig
   val is_isolated : bool
   val symbol : Symbol.t
   val amount : float
-  val recvWindow : int
+  val recv_window : int
 end
 
 module type Margin_account_borrow' = sig
@@ -22,7 +22,7 @@ module Make(P : Parameters) : Margin_account_borrow' = struct
       ("isIsolated", Binance_bool.wrap is_isolated);
       ("symbol", Symbol.wrap symbol);
       ("amount", string_of_float amount);
-      ("recvWindows", string_of_int recvWindow)
+      ("recvWindows", string_of_int recv_window)
     ];;
 
   let endpoint = Url.build_signed P.url "/sapi/v1/margin/loan" parameters P.secret_key;;

@@ -4,8 +4,8 @@ module type Parameters = sig
   val url : string
   val symbol : Symbol.t
   val interval : Chart_interval.t
-  val startTime : int
-  val endTime : int
+  val start_time : int
+  val end_time : int
   val limit : int
 end
 

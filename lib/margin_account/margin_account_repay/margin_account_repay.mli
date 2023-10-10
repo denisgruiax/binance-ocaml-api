@@ -8,7 +8,7 @@ module type Parameters = sig
   val is_isolated : bool
   val symbol : Symbol.t
   val amount : float
-  val recvWindow : int
+  val recv_window : int
 end
 
 module type Margin_account_repay' = sig

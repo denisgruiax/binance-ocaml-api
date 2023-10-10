@@ -7,7 +7,7 @@ module type Parameters = sig
   val asset : Symbol.t
   val amount : float
   val type_of_transfer : Wallet_transfer_direction.t
-  val recvWindow : int
+  val recv_window : int
 end
 
 module type Cross_margin_account_transfer' = sig
