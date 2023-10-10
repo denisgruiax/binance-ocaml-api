@@ -4,6 +4,7 @@ module type Parameters = sig
   val url : string
   val symbol : Symbol.t
   val limit : int
+  val from_id : int
 end
 
 module type Old_trade_lookup' = sig

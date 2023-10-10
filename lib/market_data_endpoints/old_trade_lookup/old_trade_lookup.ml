@@ -5,6 +5,7 @@ module type Parameters = sig
   val url : string
   val symbol : Symbol.t
   val limit : int
+  val from_id : int
 end
 
 module type Old_trade_lookup' = sig
@@ -34,7 +35,8 @@ module Make(P : Parameters) : Old_trade_lookup' = struct
 
   let parameters = let open P in [
       ("symbol", Symbol.wrap symbol);
-      ("limit", string_of_int(Url.check_limit 1 1000 500 limit))
+      ("limit", string_of_int(Url.check_limit 1 1000 500 limit));
+      ("fromId", string_of_int P.from_id)
     ];;
 
   let endpoint = Url.build_public P.url "/api/v3/historicalTrades" parameters;;

@@ -3,6 +3,7 @@ open Utilities;;
 open Lwt.Syntax;;
 open Variants.Symbol;;
 open Variants.Chart_interval;;
+
 module BitcoinCandlesticks = Klines.Make(struct 
     let url = Base_urls.api_default 
     let symbol = Symbol "BTCUSDT" 

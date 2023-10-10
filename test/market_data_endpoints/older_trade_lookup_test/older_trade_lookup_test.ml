@@ -7,6 +7,7 @@ module Old_trade_lookup' = Old_trade_lookup.Make(struct
     let url = Base_urls.api_default
     let symbol = Symbol "SOLUSDT"
     let limit = 10
+    let from_id = 0
   end)
 
 let check_trade = let open Old_trade_lookup' in function
