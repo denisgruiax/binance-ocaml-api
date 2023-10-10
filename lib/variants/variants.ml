@@ -11,6 +11,7 @@ module Order_status = Order_status
 module Order_types = Order_types
 module Rate_limit_interval = Rate_limit_interval
 module Rate_limiters_type = Rate_limiters_type
+module Side_effect_type = Side_effect_type
 module Symbol = Symbol
 module Symbol_status = Symbol_status
 module Time_in_force = Time_in_force

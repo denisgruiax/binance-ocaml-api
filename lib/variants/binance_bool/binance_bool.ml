@@ -7,4 +7,4 @@ let wrap = function
 let unwrap = function
   |"FALSE" -> False
   |"TRUE" -> True
-  |_ -> raise Not_found;;
+  |_ -> raise Not_found

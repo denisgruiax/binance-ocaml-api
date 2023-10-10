@@ -1,23 +1,23 @@
+open Variants;;
+
 module type Parameters = sig
   val url : string
   val api_key : string
   val secret_key : string
-  val symbol : string
-  val isIsolated : string
-  val side : string
-  val type_of_order : string
+  val symbol : Symbol.t
+  val is_isolated : Binance_bool.t
+  val side : Order_side.t
+  val type_of_order : Order_types.t
   val quantity : float
-  val quoteOrderQty : float
+  val quote_order_quantity : float
   val price : float
-  val stopPrice : float
-  val newClientOrderId : string
-  val icebergQty : float
-  val newOrderRespType : string
-  val sideEffectType : string
-  val timeInForce : string
-  val selfTradePreventionMode : string
-  val autoRepayAtCancel : string
-  val recvWindow : int
+  val stop_price : float
+  val iceberg_quantity : float
+  val new_order_resp_type : Order_response.t
+  val side_effect_type : Side_effect_type.t
+  val time_in_force : Time_in_force.t
+  val auto_repay_at_cancel : Binance_bool.t
+  val recv_window : int
 end
 
 module type New_order' = sig

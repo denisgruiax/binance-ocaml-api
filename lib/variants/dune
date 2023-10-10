@@ -18,6 +18,7 @@
   order_types
   rate_limit_interval
   rate_limiters_type
+  side_effect_type
   symbol
   symbol_status
   time_in_force
