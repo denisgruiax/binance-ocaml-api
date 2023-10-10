@@ -1,6 +1,5 @@
 open Utilities;;
 open Variants;;
-open Lwt.Syntax;;
 open Lwt.Infix;;
 
 module type Parameters = sig
@@ -95,6 +94,6 @@ module Make(P : Parameters) : Close_order' = struct
 
   let parse_response json = 
     json >>= fun json' -> Lwt.return (get_data json');;
-    
+
   let close_order () = parse_response (Requests.delete (Uri.of_string endpoint) headers);;
 end
