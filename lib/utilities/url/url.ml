@@ -2,6 +2,7 @@ let timestamp () = string_of_int(int_of_float ((Unix.gettimeofday ()) *. 1000.0)
 
 let check_value value = match value with
   |"0" -> false
+  |"0.0" -> false
   |"" -> false
   |_ -> true;;
 
