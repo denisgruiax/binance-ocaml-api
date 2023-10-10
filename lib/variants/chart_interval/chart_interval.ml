@@ -1,45 +1,45 @@
 type t =
-  |SECOND of int
-  |MINUTE of int
-  |HOUR of int
-  |DAY of int
-  |WEEK of int
-  |MONTH of int;;
+  |Second of int
+  |Minute of int
+  |Hour of int
+  |Day of int
+  |Week of int
+  |Month of int;;
 
 let wrap = function
-  |SECOND 1 -> "1s"
-  |MINUTE 1 -> "1m"
-  |MINUTE 3 -> "3m"
-  |MINUTE 5 -> "5m"
-  |MINUTE 15 -> "15m"
-  |MINUTE 30 -> "30m"
-  |HOUR 1 -> "1h"
-  |HOUR 2 -> "2h"
-  |HOUR 4 -> "4h"
-  |HOUR 6 -> "6h"
-  |HOUR 8 -> "8h"
-  |HOUR 12 -> "12h"
-  |DAY 1 -> "1d"
-  |DAY 3 -> "3d"
-  |WEEK 1 -> "1w"
-  |MONTH 1 -> "1M"
+  |Second 1 -> "1s"
+  |Minute 1 -> "1m"
+  |Minute 3 -> "3m"
+  |Minute 5 -> "5m"
+  |Minute 15 -> "15m"
+  |Minute 30 -> "30m"
+  |Hour 1 -> "1h"
+  |Hour 2 -> "2h"
+  |Hour 4 -> "4h"
+  |Hour 6 -> "6h"
+  |Hour 8 -> "8h"
+  |Hour 12 -> "12h"
+  |Day 1 -> "1d"
+  |Day 3 -> "3d"
+  |Week 1 -> "1w"
+  |Month 1 -> "1M"
   |_ -> raise Not_found;;
 
 let unwrap = function
-  |"1s" -> SECOND 1
-  |"1m" -> MINUTE 1
-  |"3m" -> MINUTE 3
-  |"5m" -> MINUTE 5
-  |"15m" -> MINUTE 15
-  |"30m" -> MINUTE 30
-  |"1h" -> HOUR 1
-  |"2h" -> HOUR 2
-  |"4h" -> HOUR 4
-  |"6h" -> HOUR 6
-  |"8h" -> HOUR 8
-  |"12h" -> HOUR 12
-  |"1d" -> DAY 1
-  |"3d" -> DAY 3
-  |"1w" -> WEEK 1
-  |"1M" -> MONTH 1
+  |"1s" -> Second 1
+  |"1m" -> Minute 1
+  |"3m" -> Minute 3
+  |"5m" -> Minute 5
+  |"15m" -> Minute 15
+  |"30m" -> Minute 30
+  |"1h" -> Hour 1
+  |"2h" -> Hour 2
+  |"4h" -> Hour 4
+  |"6h" -> Hour 6
+  |"8h" -> Hour 8
+  |"12h" -> Hour 12
+  |"1d" -> Day 1
+  |"3d" -> Day 3
+  |"1w" -> Week 1
+  |"1M" -> Month 1
   |_ -> raise Not_found;;

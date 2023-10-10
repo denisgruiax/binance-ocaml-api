@@ -1,10 +1,11 @@
 open Utilities;;
 open Lwt.Infix;;
+open Variants;;
 
 module type Parameters = sig
   val url : string
-  val symbol : string
-  val interval : string
+  val symbol : Symbol.t
+  val interval : Chart_interval.t
   val startTime : int
   val endTime : int
   val limit : int
@@ -25,7 +26,6 @@ module type CandleStick = sig
   }
 
   val endpoint : string
-  val interval : string
   val get_candlesticks : unit -> candlestick list Lwt.t
   val get_open_times : unit -> int list Lwt.t
   val get_open_prices : unit -> float list Lwt.t
@@ -46,14 +46,12 @@ module Make(P : Parameters) : CandleStick = struct
   let endpoint = "/api/v3/klines";;
 
   let parameters = let open P in [
-      ("symbol", symbol);
-      ("interval", interval);
+      ("symbol", Symbol.wrap symbol);
+      ("interval", Chart_interval.wrap interval);
       ("startTime", string_of_int startTime);
       ("endTime", string_of_int endTime);
       ("limit", string_of_int(Url.check_limit 1 1000 500 limit))
     ];;
-
-  let interval = P.interval;;
 
   type candlestick = {
     open_time : int;
