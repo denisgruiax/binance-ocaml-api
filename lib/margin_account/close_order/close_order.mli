@@ -5,7 +5,7 @@ module type Parameters = sig
   val api_key : string
   val secret_key : string
   val symbol : Symbol.t
-  val is_isolated : Binance_bool.t
+  val is_isolated : bool
   val order_id : int
   val recv_window : int
 end

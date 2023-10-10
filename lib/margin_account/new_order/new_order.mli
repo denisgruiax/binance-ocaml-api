@@ -5,7 +5,7 @@ module type Parameters = sig
   val api_key : string
   val secret_key : string
   val symbol : Symbol.t
-  val is_isolated : Binance_bool.t
+  val is_isolated : bool
   val side : Order_side.t
   val type_of_order : Order_types.t
   val quantity : float
@@ -16,7 +16,7 @@ module type Parameters = sig
   val new_order_resp_type : Order_response.t
   val side_effect_type : Side_effect_type.t
   val time_in_force : Time_in_force.t
-  val auto_repay_at_cancel : Binance_bool.t
+  val auto_repay_at_cancel : bool
   val recv_window : int
 end
 
