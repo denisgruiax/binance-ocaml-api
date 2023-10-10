@@ -45,22 +45,14 @@ module Make(P : Parameters) : Old_trade_lookup' = struct
           id = int_of_float (Ezjsonm.(find fields ["id"] |> get_float));
           price = float_of_string Ezjsonm.(find fields ["price"] |> get_string);
           qty = float_of_string  Ezjsonm.(find fields ["qty"] |> get_string);
-          quoteQty = float_of_string  Ezjsonm.(find fields ["quoteQty"] |> get_string);
+          quoteQty = float_of_string Ezjsonm.(find fields ["quoteQty"] |> get_string);
           time = int_of_float (Ezjsonm.(find fields ["time"] |> get_float));
           isBuyerMaker = Ezjsonm.(find fields ["isBuyerMaker"] |> get_bool);
           isBestMatch = Ezjsonm.(find fields ["isBestMatch"] |> get_bool);
-        }
-
-  let get_list_of_data data = let rec get_list_of_data' data acc = match data with
-      |`A( head :: tail) -> get_list_of_data' (`A tail) (get_data head :: acc)
-      |_ -> List.rev acc
-    in get_list_of_data' data [];;
-  ;;
+        };;
 
   let parse_recent_trade_list json = 
-    json >>= fun json' -> Lwt.return (get_list_of_data json');;
-
-
+    json >>= fun json' -> Lwt.return (Data.get_list get_data json');;
 
   let get_older_trades () = parse_recent_trade_list (Requests.get endpoint);;
 end

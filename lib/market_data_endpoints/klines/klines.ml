@@ -101,13 +101,8 @@ module Make(P : Parameters) : CandleStick = struct
         taker_buy_quote_asset_volume = 0.0
       };; 
 
-  let parse_kline_data_aux json  = let rec parse_kline_data' json acc = match json with
-      |`A (`A head :: tail) -> parse_kline_data' (`A tail) ((get_data head) :: acc)
-      |_ -> List.rev acc 
-    in parse_kline_data' json [];;
-
   let parse_kline_data json = 
-    json >>= fun json' -> Lwt.return (parse_kline_data_aux json');;
+    json >>= fun json' -> Lwt.return (Data.get_list_from_list get_data json');;
 
   let get_candlesticks () = let url = Url.build_public P.url endpoint parameters 
     in parse_kline_data (Requests.get url);;

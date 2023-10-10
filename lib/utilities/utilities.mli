@@ -7,6 +7,7 @@ module Base_urls : sig
   val api4 : string
 end
 
-module Requests = Requests
 module Crypto = Crypto
+module Data = Data
+module Requests = Requests
 module Url = Url
