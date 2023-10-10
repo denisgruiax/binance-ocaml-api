@@ -7,17 +7,22 @@
   variants
   account_symbol_permissions
   allocation_type
+  binance_bool
   chart_interval
   contingency_type
   oco_order_status
+  order_side
   oco_status
   order_response
   order_status
   order_types
   rate_limit_interval
   rate_limiters_type
+  side_effect_type
+  symbol
   symbol_status
   time_in_force
+  wallet_transfer_direction
   working_floor)
  (libraries)
  (flags

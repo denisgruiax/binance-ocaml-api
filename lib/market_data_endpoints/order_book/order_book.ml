@@ -1,9 +1,10 @@
 open Utilities;;
 open Lwt.Infix;;
+open Variants;;
 
 module type Parameters = sig
   val url : string
-  val symbol : string
+  val symbol : Symbol.t
   val limit : int
 end
 
@@ -25,7 +26,7 @@ module Make(P : Parameters) : Order_book' = struct
   };;
 
   let parameters = let open P in [
-      ("symbol", symbol);
+      ("symbol", Symbol.wrap symbol);
       ("limit", string_of_int(Url.check_limit 1 5000 100 limit))
     ];;
 
@@ -35,18 +36,12 @@ module Make(P : Parameters) : Order_book' = struct
     |[`String val1; `String val2] -> (float_of_string val1 , float_of_string val2)
     |_ -> (0.0, 0.0) ;;
 
-  let get_list_of_data data = let rec get_list_of_data' data acc = match data with
-      |`A(`A head :: tail) -> get_list_of_data' (`A tail) (get_data head :: acc) 
-      |_ -> List.rev acc
-    in get_list_of_data' data [];;
-
   let get_depth_data = function
     |fields -> {
         lastUpdateId = Ezjsonm.find fields ["lastUpdateId"] |> Ezjsonm.get_float |> int_of_float;
-        bids_t = Ezjsonm.find fields ["bids"] |> get_list_of_data;
-        asks_t = Ezjsonm.find fields ["asks"] |> get_list_of_data
-      }
-  ;;
+        bids_t = Ezjsonm.find fields ["bids"] |> Data.get_list_from_list get_data;
+        asks_t = Ezjsonm.find fields ["asks"] |> Data.get_list_from_list get_data
+      };;
 
   let parse_depth_data json = 
     json >>= fun json' -> Lwt.return(get_depth_data json');; 

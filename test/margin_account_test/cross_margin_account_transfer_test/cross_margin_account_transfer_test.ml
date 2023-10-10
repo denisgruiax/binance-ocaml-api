@@ -2,13 +2,16 @@ open Binance_ocaml_api.Margin_account;;
 open Lwt.Syntax;;
 open Utilities;;
 
+open Variants.Symbol;;
+open Variants.Wallet_transfer_direction;;
+
 module Transfer = Cross_margin_account_transfer.Make(struct
     let url = Base_urls.api_default  
     let api_key = "YOUR_BINANCE_API_KEY"
     let secret_key = "YOUR_BINANCE_SECRET_KEY"
-    let asset = "SOL"
-    let amount = 1
-    let type_of_transfer = 1
+    let asset = Symbol "SOL"
+    let amount = 1.0
+    let type_of_transfer = To_cross_margin_account
     let recvWindow = 5000
   end)
 

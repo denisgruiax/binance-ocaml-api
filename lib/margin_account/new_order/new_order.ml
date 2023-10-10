@@ -1,26 +1,25 @@
 open Utilities;;
 open Lwt.Infix;;
+open Variants;;
 
 module type Parameters = sig
   val url : string
   val api_key : string
   val secret_key : string
-  val symbol : string
-  val isIsolated : string
-  val side : string
-  val type_of_order : string
+  val symbol : Symbol.t
+  val is_isolated : Binance_bool.t
+  val side : Order_side.t
+  val type_of_order : Order_types.t
   val quantity : float
-  val quoteOrderQty : float
+  val quote_order_quantity : float
   val price : float
-  val stopPrice : float
-  val newClientOrderId : string
-  val icebergQty : float
-  val newOrderRespType : string
-  val sideEffectType : string
-  val timeInForce : string
-  val selfTradePreventionMode : string
-  val autoRepayAtCancel : string
-  val recvWindow : int
+  val stop_price : float
+  val iceberg_quantity : float
+  val new_order_resp_type : Order_response.t
+  val side_effect_type : Side_effect_type.t
+  val time_in_force : Time_in_force.t
+  val auto_repay_at_cancel : Binance_bool.t
+  val recv_window : int
 end
 
 module type New_order' = sig
@@ -83,22 +82,20 @@ module Make(P : Parameters) : New_order' = struct
   };;
 
   let parameters = let open P in [
-      ("symbol", symbol);
-      ("isIsolated", isIsolated);
-      ("side", side);
-      ("type", type_of_order);
+      ("symbol", Symbol.wrap symbol);
+      ("isIsolated", Binance_bool.wrap is_isolated);
+      ("side", Order_side.wrap side);
+      ("type", Order_types.wrap type_of_order);
       ("quantity", string_of_float  quantity);
-      ("quoteOrderQty", string_of_float quoteOrderQty);
+      ("quoteOrderQty", string_of_float quote_order_quantity);
       ("price", string_of_float price);
-      ("stopPrice", string_of_float stopPrice);
-      ("newClientOrderId", newClientOrderId);
-      ("icebergQty", string_of_float icebergQty);
-      ("newOrderRespType", newOrderRespType);
-      ("sideEffectType", sideEffectType);
-      ("timeInForce", timeInForce);
-      ("selfTradePreventionMode", selfTradePreventionMode);
-      ("autoRepayAtCancel", autoRepayAtCancel);
-      ("recvWindow", string_of_int recvWindow)
+      ("stopPrice", string_of_float stop_price);
+      ("icebergQty", string_of_float iceberg_quantity);
+      ("newOrderRespType", Order_response.wrap new_order_resp_type);
+      ("sideEffectType", Side_effect_type.wrap side_effect_type);
+      ("timeInForce", Time_in_force.wrap time_in_force);
+      ("autoRepayAtCancel", Binance_bool.wrap auto_repay_at_cancel);
+      ("recvWindow", string_of_int recv_window)
     ]
 
   let endpoint = Url.build_signed P.url "/sapi/v1/margin/order" parameters P.secret_key;;

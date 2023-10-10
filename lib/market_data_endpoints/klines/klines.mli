@@ -1,7 +1,9 @@
+open Variants;;
+
 module type Parameters = sig
   val url : string
-  val symbol : string
-  val interval : string
+  val symbol : Symbol.t
+  val interval : Chart_interval.t
   val startTime : int
   val endTime : int
   val limit : int
@@ -23,7 +25,6 @@ module type CandleStick = sig
   }
   
   val endpoint : string
-  val interval : string
   val get_candlesticks : unit -> candlestick list Lwt.t
   val get_open_times : unit -> int list Lwt.t
   val get_open_prices : unit -> float list Lwt.t

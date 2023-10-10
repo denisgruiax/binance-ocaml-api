@@ -1,10 +1,11 @@
 open Utilities;;
 open Lwt.Infix;;
+open Variants;;
 
 module type Parameters = sig
   val url : string
-  val symbol : string
-  val interval : string
+  val symbol : Symbol.t
+  val interval : Chart_interval.t
   val startTime : int
   val endTime : int
   val limit : int
@@ -25,7 +26,6 @@ module type CandleStick = sig
   }
 
   val endpoint : string
-  val interval : string
   val get_candlesticks : unit -> candlestick list Lwt.t
   val get_open_times : unit -> int list Lwt.t
   val get_open_prices : unit -> float list Lwt.t
@@ -46,14 +46,12 @@ module Make(P : Parameters) : CandleStick = struct
   let endpoint = "/api/v3/klines";;
 
   let parameters = let open P in [
-      ("symbol", symbol);
-      ("interval", interval);
+      ("symbol", Symbol.wrap symbol);
+      ("interval", Chart_interval.wrap interval);
       ("startTime", string_of_int startTime);
       ("endTime", string_of_int endTime);
       ("limit", string_of_int(Url.check_limit 1 1000 500 limit))
     ];;
-
-  let interval = P.interval;;
 
   type candlestick = {
     open_time : int;
@@ -101,13 +99,8 @@ module Make(P : Parameters) : CandleStick = struct
         taker_buy_quote_asset_volume = 0.0
       };; 
 
-  let parse_kline_data_aux json  = let rec parse_kline_data' json acc = match json with
-      |`A (`A head :: tail) -> parse_kline_data' (`A tail) ((get_data head) :: acc)
-      |_ -> List.rev acc 
-    in parse_kline_data' json [];;
-
   let parse_kline_data json = 
-    json >>= fun json' -> Lwt.return (parse_kline_data_aux json');;
+    json >>= fun json' -> Lwt.return (Data.get_list_from_list get_data json');;
 
   let get_candlesticks () = let url = Url.build_public P.url endpoint parameters 
     in parse_kline_data (Requests.get url);;

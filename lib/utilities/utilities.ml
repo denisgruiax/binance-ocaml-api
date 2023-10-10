@@ -8,5 +8,6 @@ module Base_urls = struct
 end
 
 module Crypto = Crypto
+module Data = Data
 module Requests = Requests
 module Url = Url

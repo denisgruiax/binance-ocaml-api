@@ -1,4 +1,4 @@
-type t = BUY | SELL;;
+type t = False | True;;
 
 val wrap : t -> string
 

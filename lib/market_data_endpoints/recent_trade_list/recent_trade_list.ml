@@ -1,9 +1,10 @@
 open Utilities;;
 open Lwt.Infix;;
+open Variants;;
 
 module type Parameters = sig
   val url : string
-  val symbol : string
+  val symbol : Symbol.t
   val limit : int
 end
 
@@ -33,7 +34,7 @@ module Make(P : Parameters) : Recent_trade_list' = struct
   };;
 
   let parameters = let open P in [
-      ("symbol", symbol);
+      ("symbol", Symbol.wrap symbol);
       ("limit", string_of_int(Url.check_limit 1 1000 500 limit))
     ];;
 
@@ -51,14 +52,8 @@ module Make(P : Parameters) : Recent_trade_list' = struct
           isBestMatch = Ezjsonm.(find fields ["isBestMatch"] |> get_bool);
         }
 
-  let get_list_of_data data = let rec get_list_of_data' data acc = match data with
-      |`A( head :: tail) -> get_list_of_data' (`A tail) (get_data head :: acc)
-      |_ -> List.rev acc
-    in get_list_of_data' data [];;
-  ;;
-
   let parse_recent_trade_list json = 
-    json >>= fun json' -> Lwt.return (get_list_of_data json');;
+    json >>= fun json' -> Lwt.return (Data.get_list get_data json');;
 
   let get_recent_trade_list () = parse_recent_trade_list (Requests.get endpoint);;
 end

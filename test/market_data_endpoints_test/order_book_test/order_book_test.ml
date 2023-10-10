@@ -1,10 +1,11 @@
 open Binance_ocaml_api.Market_data_endpoints;;
 open Utilities;;
 open Lwt.Syntax;;
+open Variants.Symbol;;
 
 module Order_book'  = Order_book.Make(struct
     let url = Base_urls.api_default
-    let symbol = "EGLDUSDT"
+    let symbol = Symbol "EGLDUSDT"
     let limit = 10 
   end)
 

@@ -1,14 +1,15 @@
 open Utilities;;
 open Lwt.Infix;;
+open Variants;;
 
 module type Parameters = sig
   val url : string
   val api_key : string
   val secret_key : string 
-  val asset : string
-  val isIsolated : string
-  val amount : int
-  val symbol : string
+  val asset : Symbol.t
+  val is_isolated : Binance_bool.t
+  val symbol : Symbol.t
+  val amount : float
   val recvWindow : int
 end
 
@@ -18,11 +19,11 @@ end
 
 module Make(P : Parameters) : Margin_account_repay' = struct
   let parameters = let open P in [
-      ("asset", asset);
-      ("isIsolated", isIsolated);
-      ("symbol", symbol);
-      ("amount", string_of_int amount);
-      ("recvWindow", string_of_int recvWindow)
+      ("asset", Symbol.wrap asset);
+      ("isIsolated", Binance_bool.wrap is_isolated);
+      ("symbol", Symbol.wrap symbol);
+      ("amount", string_of_float amount);
+      ("recvWindows", string_of_int recvWindow)
     ];;
 
   let endpoint = Url.build_signed P.url "/sapi/v1/margin/repay" parameters P.secret_key;;

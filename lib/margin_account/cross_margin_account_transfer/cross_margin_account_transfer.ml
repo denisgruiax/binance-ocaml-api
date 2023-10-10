@@ -1,13 +1,14 @@
 open Utilities;;
 open Lwt.Infix;;
+open Variants;;
 
 module type Parameters = sig
   val url : string
   val api_key : string
   val secret_key : string 
-  val asset : string
-  val amount : int
-  val type_of_transfer : int
+  val asset : Symbol.t
+  val amount : float
+  val type_of_transfer : Wallet_transfer_direction.t
   val recvWindow : int
 end
 
@@ -17,9 +18,9 @@ end
 
 module Make(P : Parameters) : Cross_margin_account_transfer' = struct
   let parameters = let open P in [
-      ("asset", asset);
-      ("amount", string_of_int amount);
-      ("type", string_of_int type_of_transfer);
+      ("asset", Symbol.wrap asset);
+      ("amount", string_of_float amount);
+      ("type", Wallet_transfer_direction.wrap type_of_transfer);
       ("recvWindows", string_of_int recvWindow)
     ];;
 

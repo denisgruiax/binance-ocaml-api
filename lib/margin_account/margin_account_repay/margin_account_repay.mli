@@ -1,11 +1,13 @@
+open Variants
+
 module type Parameters = sig
   val url : string
   val api_key : string
   val secret_key : string 
-  val asset : string
-  val isIsolated : string
-  val amount : int
-  val symbol : string
+  val asset : Symbol.t
+  val is_isolated : Binance_bool.t
+  val symbol : Symbol.t
+  val amount : float
   val recvWindow : int
 end
 

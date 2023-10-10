@@ -1,11 +1,13 @@
 open Binance_ocaml_api.Market_data_endpoints
 open Utilities;;
 open Lwt.Syntax;;
+open Variants.Symbol;;
+open Variants.Chart_interval;;
 
 module BitcoinCandlesticks = Klines.Make(struct 
     let url = Base_urls.api_default 
-    let symbol = "BTCUSDT" 
-    let interval = "5m"
+    let symbol = Symbol "BTCUSDT" 
+    let interval = Minute 5
     let startTime = 0
     let endTime = 0
     let limit = 100
@@ -13,8 +15,8 @@ module BitcoinCandlesticks = Klines.Make(struct
 
 module MultiversXCandlesticks = Klines.Make(struct 
     let url = Base_urls.api_default
-    let symbol = "EGLDUSDT"
-    let interval = "1h"
+    let symbol = Symbol "EGLDUSDT"
+    let interval = Hour 1
     let startTime = 0
     let endTime = 0
     let limit = 500
@@ -22,12 +24,12 @@ module MultiversXCandlesticks = Klines.Make(struct
 
 module PolkadotCandlesticks = Klines.Make(struct
     let url = Base_urls.api_default
-    let symbol = "DOTUSDT"
-    let interval = "4h"
+    let symbol = Symbol "DOTUSDT"
+    let interval = Hour 4
     let startTime = 0
     let endTime = 0
     let limit  = 1000  
-end);; 
+  end);; 
 
 let bitcoin_candlesticks_size () = let* candlesticks = BitcoinCandlesticks.get_candlesticks ()
   in Alcotest.(check int "Bitcoin number of candlesticks.") 100 (List.length candlesticks);
