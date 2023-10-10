@@ -1,11 +1,11 @@
 open Binance_ocaml_api.Market_data_endpoints;;
 open Utilities;;
 open Lwt.Syntax;;
-
+open Variants.Symbol;;
 module Recent_trade_list' = Recent_trade_list.Make(struct
     let url = Base_urls.api_default
-    let symbol = "BNBUSDT"
-    let limit = 10
+    let symbol = Symbol "BNBUSDT"
+      let limit = 10
   end)
 
 let check_trade = let open Recent_trade_list' in function
@@ -31,4 +31,4 @@ let test_get_recent_trade_list switch () =
 
 let suite () = "Recent trade list",[
     Alcotest_lwt.test_case "Test recent trade list." `Quick test_get_recent_trade_list
-]
+  ]

@@ -1,10 +1,11 @@
 open Binance_ocaml_api.Market_data_endpoints;;
 open Utilities;;
 open Lwt.Syntax;;
+open Variants.Symbol;;
 
 module Old_trade_lookup' = Old_trade_lookup.Make(struct
     let url = Base_urls.api_default
-    let symbol = "SOLUSDT"
+    let symbol = Symbol "SOLUSDT"
     let limit = 10
   end)
 

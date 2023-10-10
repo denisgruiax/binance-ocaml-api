@@ -1,9 +1,9 @@
 open Utilities;;
 open Lwt.Infix;;
-
+open Variants;;
 module type Parameters = sig
   val url : string
-  val symbol : string
+  val symbol : Symbol.t
   val limit : int
 end
 
@@ -33,7 +33,7 @@ module Make(P : Parameters) : Old_trade_lookup' = struct
   };;
 
   let parameters = let open P in [
-      ("symbol", symbol);
+      ("symbol", Symbol.wrap symbol);
       ("limit", string_of_int(Url.check_limit 1 1000 500 limit))
     ];;
 

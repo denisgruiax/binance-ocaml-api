@@ -1,6 +1,8 @@
+open Variants;;
+
 module type Parameters = sig
   val url : string
-  val symbol : string
+  val symbol : Symbol.t
   val limit : int
 end
 

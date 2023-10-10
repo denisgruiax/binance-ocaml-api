@@ -13,12 +13,13 @@ end
 module Make(P : Parameters) : Price = struct
   let endpoint = "/api/v3/ticker/price";;
 
-  let variant_to_string_pair symbols = let open Symbol in match symbols with
+  let variant_to_parameter_pair symbols = let open Symbol in 
+    match symbols with
     |Symbol symbol -> ("symbol", symbol)
     |Symbols symbols -> ("symbols", Symbol.wrap (Symbols symbols));;
 
   let parameters = let open P in [
-      variant_to_string_pair symbol
+      variant_to_parameter_pair symbol
     ];;
 
   let get_data = function
