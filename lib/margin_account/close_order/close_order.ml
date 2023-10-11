@@ -7,15 +7,12 @@ module type Parameters = sig
   val api_key : string
   val secret_key : string
   val symbol : Symbol.t
-  val is_isolated : bool
-  val order_id : int
   val recv_window : int
 end
 
 module type Close_order' = sig
   type t
-  
-  val close_order : unit -> t Lwt.t
+  val close_order : bool -> int -> t option Lwt.t
 end
 
 module Make(P : Parameters) : Close_order' = struct
@@ -37,8 +34,6 @@ module Make(P : Parameters) : Close_order' = struct
 
   let parameters = let open P in [
       ("symbol", Symbol.wrap symbol);
-      ("isIsolated", Binance_bool.wrap is_isolated);
-      ("orderId", string_of_int order_id);
       ("recvWindow", string_of_int recv_window)
     ];;
 
@@ -61,7 +56,7 @@ module Make(P : Parameters) : Close_order' = struct
         ("timeInForce", `String s10);
         ("type", `String s11);
         ("side", `String s12)
-      ] -> {
+      ] -> Some {
         symbol = Symbol.unwrap s1;
         is_isolated = v1;
         order_id = int_of_string s2;
@@ -76,10 +71,13 @@ module Make(P : Parameters) : Close_order' = struct
         order_type = Order_types.unwrap s11;
         side = Order_side.unwrap s12;  
       }
-    |_ -> raise Not_found;;
+    |_ -> None;;
 
   let parse_response json = 
     json >>= fun json' -> Lwt.return (get_data json');;
 
-  let close_order () = parse_response (Requests.delete (Uri.of_string endpoint) headers);;
+  let close_order is_isolated order_id = 
+    let p = parameters @ [("isIsolated", Binance_bool.wrap is_isolated)] @ [("orderId", string_of_int order_id)] in
+    let url = Url.build_signed P.url "/sapi/v1/margin/order" p P.secret_key in
+    parse_response (Requests.delete (Uri.of_string url) headers);;
 end

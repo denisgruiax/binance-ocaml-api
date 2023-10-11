@@ -9,13 +9,11 @@ module Close_order' = Close_order.Make(struct
     let api_key = "YOUR_API_KEY"
     let secret_key = "YOUR_SECRET_KEY"
     let symbol = Symbol "BTCUSDT"
-    let is_isolated = true
-    let order_id = 10
     let recv_window = 0
   end);;
 
 (*Just a template*)
-let close_order () = let* _ = Close_order'.close_order () in
+let close_order () = let* _ = Close_order'.close_order false 28 in
   Alcotest.(check bool "Test close order on BTCUSDT pair." true true);Lwt.return ();;
 
 let test_close_order switch () = 
