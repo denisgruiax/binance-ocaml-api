@@ -12,7 +12,7 @@ module type Parameters = sig
 end
 
 module type Margin_account_repay' = sig
-  val make_borrow : unit -> int Lwt.t
+  val make_repay : unit -> int Lwt.t
 end
 
 module Make : functor (P : Parameters) -> Margin_account_repay'

@@ -14,7 +14,7 @@ module type Parameters = sig
 end
 
 module type Margin_account_repay' = sig
-  val make_borrow : unit -> int Lwt.t
+  val make_repay : unit -> int Lwt.t
 end
 
 module Make(P : Parameters) : Margin_account_repay' = struct
@@ -33,5 +33,5 @@ module Make(P : Parameters) : Margin_account_repay' = struct
   let get_data json  = json >>= fun json' -> 
     Lwt.return (Ezjsonm.(find json' ["id"] |> get_float |> int_of_float));;
 
-  let make_borrow () = let json = Requests.post (Uri.of_string endpoint) in get_data (json headers);;
+  let make_repay () = let json = Requests.post (Uri.of_string endpoint) in get_data (json headers);;
 end
