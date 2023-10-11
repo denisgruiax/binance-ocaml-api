@@ -40,7 +40,7 @@ module type New_order' = sig
     status : string;
     timeInForce : string;
     type_of_order : string;
-    side :string;
+    side : string;
     marginBuyBorrowAmount : int;
     marginBuyBorrowAsset : string;
     isIsolated : string;

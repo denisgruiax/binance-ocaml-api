@@ -73,7 +73,7 @@ module Make(P : Parameters) : New_order' = struct
     status : string;
     timeInForce : string;
     type_of_order : string;
-    side :string;
+    side : string;
     marginBuyBorrowAmount : int;
     marginBuyBorrowAsset : string;
     isIsolated : string;
