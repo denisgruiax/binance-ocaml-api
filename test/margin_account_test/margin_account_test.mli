@@ -1,1 +1,2 @@
+module Close_order_test = Close_order_test
 module Cross_margin_account_transfer_test  = Cross_margin_account_transfer_test

@@ -12,7 +12,7 @@ module Transfer = Cross_margin_account_transfer.Make(struct
     let asset = Symbol "SOL"
     let amount = 1.0
     let type_of_transfer = To_cross_margin_account
-    let recvWindow = 5000
+    let recv_window = 5000
   end)
 
 let place_transfer () = let* id = Transfer.place_transfer () in
