@@ -11,21 +11,7 @@ module type Parameters = sig
 end
 
 module type Close_order' = sig
-  type t = {
-    symbol: Symbol.t;
-    is_isolated : bool;
-    order_id : int;
-    orig_client_order_id : string;
-    client_order_id : string;
-    price : float;
-    orig_quantity : float;
-    executed_quantity : float;
-    cummulative_quote_quantity : float;
-    status : Order_status.t;
-    time_in_force : Time_in_force.t;
-    order_type : Order_types.t;
-    side : Order_side.t
-  }
+  type t
 
   val close_order : unit -> t Lwt.t
 end
