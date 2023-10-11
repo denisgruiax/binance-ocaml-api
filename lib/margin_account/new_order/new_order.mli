@@ -6,16 +6,10 @@ module type Parameters = sig
   val secret_key : string
   val symbol : Symbol.t
   val is_isolated : bool
-  val side : Order_side.t
-  val type_of_order : Order_types.t
-  val quantity : float
   val quote_order_quantity : float
-  val price : float
   val stop_price : float
   val iceberg_quantity : float
-  val new_order_resp_type : Order_response.t
   val side_effect_type : Side_effect_type.t
-  val time_in_force : Time_in_force.t
   val auto_repay_at_cancel : bool
   val recv_window : int
 end
@@ -75,7 +69,7 @@ module type New_order' = sig
 
   type response = Ack of ack_response | Result of result_response | Full of full_response | Error_code
 
-  val new_order : unit -> response Lwt.t
+  val place : Order_side.t -> Order_types.t -> float -> float -> Time_in_force.t -> Order_response.t -> response Lwt.t
 end
 
 module Make : functor (P : Parameters) -> New_order'

@@ -8,16 +8,10 @@ module type Parameters = sig
   val secret_key : string
   val symbol : Symbol.t
   val is_isolated : bool
-  val side : Order_side.t
-  val type_of_order : Order_types.t
-  val quantity : float
   val quote_order_quantity : float
-  val price : float
   val stop_price : float
   val iceberg_quantity : float
-  val new_order_resp_type : Order_response.t
   val side_effect_type : Side_effect_type.t
-  val time_in_force : Time_in_force.t
   val auto_repay_at_cancel : bool
   val recv_window : int
 end
@@ -77,7 +71,7 @@ module type New_order' = sig
 
   type response = Ack of ack_response | Result of result_response | Full of full_response | Error_code
 
-  val new_order : unit -> response Lwt.t
+  val place : Order_side.t -> Order_types.t -> float -> float -> Time_in_force.t -> Order_response.t -> response Lwt.t
 end
 
 module Make(P : Parameters) : New_order' = struct
@@ -133,25 +127,6 @@ module Make(P : Parameters) : New_order' = struct
   };;
 
   type response = Ack of ack_response | Result of result_response | Full of full_response | Error_code;;
-
-  let parameters = let open P in [
-      ("symbol", Symbol.wrap symbol);
-      ("isIsolated", Binance_bool.wrap is_isolated);
-      ("side", Order_side.wrap side);
-      ("type", Order_types.wrap type_of_order);
-      ("quantity", string_of_float quantity);
-      ("quoteOrderQty", string_of_float quote_order_quantity);
-      ("price", string_of_float price);
-      ("stopPrice", string_of_float stop_price);
-      ("icebergQty", string_of_float iceberg_quantity);
-      ("newOrderRespType", Order_response.wrap new_order_resp_type);
-      ("sideEffectType", Side_effect_type.wrap side_effect_type);
-      ("timeInForce", Time_in_force.wrap time_in_force);
-      ("autoRepayAtCancel", Binance_bool.wrap auto_repay_at_cancel);
-      ("recvWindow", string_of_int recv_window)
-    ]
-
-  let endpoint = Url.build_signed P.url "/sapi/v1/margin/order" parameters P.secret_key;;
 
   let headers = Requests.create_header P.api_key;;
 
@@ -259,5 +234,23 @@ module Make(P : Parameters) : New_order' = struct
   let parse_response json = 
     json >>= fun json' -> Lwt.return (get_data json');;
 
-  let new_order () = parse_response (Requests.post (Uri.of_string endpoint) headers);;
+  let place side type_of_order quantity price time_in_force new_order_resp_type = 
+    let parameters = let open P in [
+        ("symbol", Symbol.wrap symbol);
+        ("isIsolated", Binance_bool.wrap is_isolated);
+        ("side", Order_side.wrap side);
+        ("type", Order_types.wrap type_of_order);
+        ("quantity", string_of_float quantity);
+        ("quoteOrderQty", string_of_float quote_order_quantity);
+        ("price", string_of_float price);
+        ("stopPrice", string_of_float stop_price);
+        ("icebergQty", string_of_float iceberg_quantity);
+        ("newOrderRespType", Order_response.wrap new_order_resp_type);
+        ("sideEffectType", Side_effect_type.wrap side_effect_type);
+        ("timeInForce", Time_in_force.wrap time_in_force);
+        ("autoRepayAtCancel", Binance_bool.wrap auto_repay_at_cancel);
+        ("recvWindow", string_of_int recv_window)
+      ] 
+    in let url = Url.build_signed P.url "/sapi/v1/margin/order" parameters P.secret_key
+    in parse_response (Requests.post (Uri.of_string url) headers);;
 end
