@@ -10,12 +10,10 @@ module Transfer = Cross_margin_account_transfer.Make(struct
     let api_key = "YOUR_BINANCE_API_KEY"
     let secret_key = "YOUR_BINANCE_SECRET_KEY"
     let asset = Symbol "SOL"
-    let amount = 1.0
-    let type_of_transfer = To_cross_margin_account
     let recv_window = 5000
   end)
 
-let place_transfer () = let* id = Transfer.place_transfer () in
+let place_transfer () = let* id = Transfer.place_transfer 1.0 To_cross_margin_account in
   Alcotest.(check bool "Test SOL asset trabsfer from spot to margin account." true (id > 0));Lwt.return ();;
 
 let test_place_transfer switch () =
