@@ -14,7 +14,7 @@ module Transfer = Cross_margin_account_transfer.Make(struct
   end)
 
 let place_transfer () = let* id = Transfer.place_transfer 1.0 To_cross_margin_account in
-  Alcotest.(check bool "Test SOL asset trabsfer from spot to margin account." true (id > 0));Lwt.return ();;
+  Alcotest.(check bool "Test SOL asset trabsfer from spot to margin account." true (Option.get id > 0));Lwt.return ();;
 
 let test_place_transfer switch () =
   Lwt_switch.add_hook (Some switch) place_transfer;Lwt.return ();; 

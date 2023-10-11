@@ -11,7 +11,7 @@ module type Parameters = sig
 end
 
 module type Cross_margin_account_transfer' = sig
-  val place_transfer : float -> Wallet_transfer_direction.t -> int Lwt.t
+  val place_transfer : float -> Wallet_transfer_direction.t -> int option Lwt.t
 end
 
 module Make(P : Parameters) : Cross_margin_account_transfer' = struct
@@ -23,7 +23,7 @@ module Make(P : Parameters) : Cross_margin_account_transfer' = struct
   let headers = Requests.create_header P.api_key;;
 
   let get_data json  = json >>= fun json' -> 
-    Lwt.return (Ezjsonm.(find json' ["id"] |> get_float |> int_of_float));;
+    Lwt.return (Some (Ezjsonm.(find json' ["id"] |> get_float |> int_of_float)));;
 
   let place_transfer amount type_of_transfer = 
     let parameters = parameters @ [("amount", string_of_float amount); ("type", Wallet_transfer_direction.wrap type_of_transfer)] in

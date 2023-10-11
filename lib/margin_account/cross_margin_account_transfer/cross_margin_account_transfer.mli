@@ -9,7 +9,7 @@ module type Parameters = sig
 end
 
 module type Cross_margin_account_transfer' = sig
-  val place_transfer : float -> Wallet_transfer_direction.t -> int Lwt.t
+  val place_transfer : float -> Wallet_transfer_direction.t -> int option Lwt.t
 end
 
 module Make : functor (P : Parameters) -> Cross_margin_account_transfer'
