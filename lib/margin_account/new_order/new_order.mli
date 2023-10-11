@@ -28,27 +28,54 @@ module type New_order' = sig
     commissionAsset : string
   }
 
-  type t = {
-    symbol : string;
-    orderId : int;
-    clientOrderId : string;
-    transactTime : int;
+  type ack_response = {
+    symbol : Symbol.t;
+    order_id : int;
+    client_order_id : string;
+    is_isolated : bool;
+    transaction_time: int
+  }
+
+  type result_response = {
+    symbol : Symbol.t;
+    order_id : int;
+    client_order_id : string;
+    transaction_time : int;
     price : float;
-    origQty : float;
-    executedQty : float;
-    cummulativeQuoteQty : float;
-    status : string;
-    timeInForce : string;
-    type_of_order : string;
-    side : string;
-    marginBuyBorrowAmount : int;
-    marginBuyBorrowAsset : string;
-    isIsolated : string;
-    selfTradePreventionMode : string;
+    orig_quantity : float;
+    executed_quantity : float;
+    cummulative_quote_quantity : float;
+    status : Order_status.t;
+    time_in_force : Time_in_force.t;
+    order_type : Order_types.t;
+    is_isolated : bool;
+    side : Order_side.t;
+    self_trade_prevention_mode : string
+  }
+
+  type full_response = {
+    symbol : Symbol.t;
+    order_id : int;
+    client_order_id : string;
+    transaction_time : int;
+    price : float;
+    orig_quantity : float;
+    executed_quantity : float;
+    cummulative_quote_quantity : float;
+    status : Order_status.t;
+    time_in_force : Time_in_force.t;
+    order_type : Order_types.t;
+    side : Order_side.t;
+    margin_buy_borrow_amount : int;
+    margin_buy_borrow_asset : string;
+    is_isolated : bool;
+    self_trade_prevention_mode : string;
     fills : fill list
   }
 
-  val new_order : unit -> t Lwt.t
+  type response = Ack of ack_response | Result of result_response | Full of full_response | Error_code
+
+  val new_order : unit -> response Lwt.t
 end
 
 module Make : functor (P : Parameters) -> New_order'
