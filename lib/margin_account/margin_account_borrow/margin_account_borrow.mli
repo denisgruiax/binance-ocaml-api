@@ -5,14 +5,12 @@ module type Parameters = sig
   val api_key : string
   val secret_key : string 
   val asset : Symbol.t
-  val is_isolated : Binance_bool.t
-  val symbol : Symbol.t
-  val amount : float
-  val recvWindow : int
+  val recv_window : int
 end
 
 module type Margin_account_borrow' = sig
-  val make_borrow : unit -> int Lwt.t
+  val borrow : float -> Wallet_transfer_direction.t -> int option Lwt.t
+  val isolated_borrow : Symbol.t -> float -> Wallet_transfer_direction.t -> int option Lwt.t
 end
 
 module Make : functor (P : Parameters) -> Margin_account_borrow'

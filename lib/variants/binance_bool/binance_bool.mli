@@ -1,5 +1,3 @@
-type t = False | True;;
+val wrap : bool -> string
 
-val wrap : t -> string
-
-val unwrap : string -> t
+val unwrap : string -> bool

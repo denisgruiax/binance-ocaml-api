@@ -1,10 +1,8 @@
-type t = False | True;;
-
 let wrap = function
-  |False -> "FALSE"
-  |True -> "TRUE";;
+  |false -> "FALSE"
+  |true -> "TRUE";;
 
 let unwrap = function
-  |"FALSE" -> False
-  |"TRUE" -> True
+  |"FALSE" -> false
+  |"TRUE" -> true
   |_ -> raise Not_found

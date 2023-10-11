@@ -8,8 +8,8 @@ module BitcoinCandlesticks = Klines.Make(struct
     let url = Base_urls.api_default 
     let symbol = Symbol "BTCUSDT" 
     let interval = Minute 5
-    let startTime = 0
-    let endTime = 0
+    let start_time = 0
+    let end_time = 0
     let limit = 100
   end);;
 
@@ -17,8 +17,8 @@ module MultiversXCandlesticks = Klines.Make(struct
     let url = Base_urls.api_default
     let symbol = Symbol "EGLDUSDT"
     let interval = Hour 1
-    let startTime = 0
-    let endTime = 0
+    let start_time = 0
+    let end_time = 0
     let limit = 500
   end);;
 
@@ -26,8 +26,8 @@ module PolkadotCandlesticks = Klines.Make(struct
     let url = Base_urls.api_default
     let symbol = Symbol "DOTUSDT"
     let interval = Hour 4
-    let startTime = 0
-    let endTime = 0
+    let start_time = 0
+    let end_time = 0
     let limit  = 1000  
   end);; 
 

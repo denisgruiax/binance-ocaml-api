@@ -5,6 +5,7 @@
  (public_name margin_account)
  (modules
   margin_account
+  close_order
   cross_margin_account_transfer
   margin_account_borrow
   margin_account_repay

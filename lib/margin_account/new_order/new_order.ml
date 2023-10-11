@@ -7,18 +7,12 @@ module type Parameters = sig
   val api_key : string
   val secret_key : string
   val symbol : Symbol.t
-  val is_isolated : Binance_bool.t
-  val side : Order_side.t
-  val type_of_order : Order_types.t
-  val quantity : float
+  val is_isolated : bool
   val quote_order_quantity : float
-  val price : float
   val stop_price : float
   val iceberg_quantity : float
-  val new_order_resp_type : Order_response.t
   val side_effect_type : Side_effect_type.t
-  val time_in_force : Time_in_force.t
-  val auto_repay_at_cancel : Binance_bool.t
+  val auto_repay_at_cancel : bool
   val recv_window : int
 end
 
@@ -30,27 +24,54 @@ module type New_order' = sig
     commissionAsset : string
   }
 
-  type t = {
-    symbol : string;
-    orderId : int;
-    clientOrderId : string;
-    transactTime : int;
+  type ack_response = {
+    symbol : Symbol.t;
+    order_id : int;
+    client_order_id : string;
+    is_isolated : bool;
+    transaction_time: int
+  }
+
+  type result_response = {
+    symbol : Symbol.t;
+    order_id : int;
+    client_order_id : string;
+    transaction_time : int;
     price : float;
-    origQty : float;
-    executedQty : float;
-    cummulativeQuoteQty : float;
-    status : string;
-    timeInForce : string;
-    type_of_order : string;
-    side :string;
-    marginBuyBorrowAmount : int;
-    marginBuyBorrowAsset : string;
-    isIsolated : string;
-    selfTradePreventionMode : string;
+    orig_quantity : float;
+    executed_quantity : float;
+    cummulative_quote_quantity : float;
+    status : Order_status.t;
+    time_in_force : Time_in_force.t;
+    order_type : Order_types.t;
+    is_isolated : bool;
+    side : Order_side.t;
+    self_trade_prevention_mode : string
+  }
+
+  type full_response = {
+    symbol : Symbol.t;
+    order_id : int;
+    client_order_id : string;
+    transaction_time : int;
+    price : float;
+    orig_quantity : float;
+    executed_quantity : float;
+    cummulative_quote_quantity : float;
+    status : Order_status.t;
+    time_in_force : Time_in_force.t;
+    order_type : Order_types.t;
+    side : Order_side.t;
+    margin_buy_borrow_amount : int;
+    margin_buy_borrow_asset : string;
+    is_isolated : bool;
+    self_trade_prevention_mode : string;
     fills : fill list
   }
 
-  val new_order : unit -> t Lwt.t
+  type response = Ack of ack_response | Result of result_response | Full of full_response | Error_code
+
+  val place : Order_side.t -> Order_types.t -> float -> float -> Time_in_force.t -> Order_response.t -> response Lwt.t
 end
 
 module Make(P : Parameters) : New_order' = struct
@@ -61,44 +82,51 @@ module Make(P : Parameters) : New_order' = struct
     commissionAsset : string
   };;
 
-  type t = {
-    symbol : string;
-    orderId : int;
-    clientOrderId : string;
-    transactTime : int;
+  type ack_response = {
+    symbol : Symbol.t;
+    order_id : int;
+    client_order_id : string;
+    is_isolated : bool;
+    transaction_time: int
+  }
+
+  type result_response = {
+    symbol : Symbol.t;
+    order_id : int;
+    client_order_id : string;
+    transaction_time : int;
     price : float;
-    origQty : float;
-    executedQty : float;
-    cummulativeQuoteQty : float;
-    status : string;
-    timeInForce : string;
-    type_of_order : string;
-    side :string;
-    marginBuyBorrowAmount : int;
-    marginBuyBorrowAsset : string;
-    isIsolated : string;
-    selfTradePreventionMode : string;
+    orig_quantity : float;
+    executed_quantity : float;
+    cummulative_quote_quantity : float;
+    status : Order_status.t;
+    time_in_force : Time_in_force.t;
+    order_type : Order_types.t;
+    is_isolated : bool;
+    side : Order_side.t;
+    self_trade_prevention_mode : string
+  }
+  type full_response = {
+    symbol : Symbol.t;
+    order_id : int;
+    client_order_id : string;
+    transaction_time : int;
+    price : float;
+    orig_quantity : float;
+    executed_quantity : float;
+    cummulative_quote_quantity : float;
+    status : Order_status.t;
+    time_in_force : Time_in_force.t;
+    order_type : Order_types.t;
+    side : Order_side.t;
+    margin_buy_borrow_amount : int;
+    margin_buy_borrow_asset : string;
+    is_isolated : bool;
+    self_trade_prevention_mode : string;
     fills : fill list
   };;
 
-  let parameters = let open P in [
-      ("symbol", Symbol.wrap symbol);
-      ("isIsolated", Binance_bool.wrap is_isolated);
-      ("side", Order_side.wrap side);
-      ("type", Order_types.wrap type_of_order);
-      ("quantity", string_of_float  quantity);
-      ("quoteOrderQty", string_of_float quote_order_quantity);
-      ("price", string_of_float price);
-      ("stopPrice", string_of_float stop_price);
-      ("icebergQty", string_of_float iceberg_quantity);
-      ("newOrderRespType", Order_response.wrap new_order_resp_type);
-      ("sideEffectType", Side_effect_type.wrap side_effect_type);
-      ("timeInForce", Time_in_force.wrap time_in_force);
-      ("autoRepayAtCancel", Binance_bool.wrap auto_repay_at_cancel);
-      ("recvWindow", string_of_int recv_window)
-    ]
-
-  let endpoint = Url.build_signed P.url "/sapi/v1/margin/order" parameters P.secret_key;;
+  type response = Ack of ack_response | Result of result_response | Full of full_response | Error_code;;
 
   let headers = Requests.create_header P.api_key;;
 
@@ -117,29 +145,112 @@ module Make(P : Parameters) : New_order' = struct
     in get_fills' fills [];;
 
   let get_data = function
-    |fields ->{
-        symbol = Ezjsonm.(find fields ["symbol"] |> get_string);
-        orderId = Ezjsonm.(find fields ["orderId"] |> get_float |> int_of_float);
-        clientOrderId = Ezjsonm.(find fields ["clientOrderId"] |> get_string);
-        transactTime = Ezjsonm.(find fields ["transactTime"] |> get_float |> int_of_float);
-        price = Ezjsonm.(find fields ["price"] |> get_string |> float_of_string);
-        origQty = Ezjsonm.(find fields ["origQty"] |> get_string |> float_of_string);
-        executedQty = Ezjsonm.(find fields ["executedQty"] |> get_string |> float_of_string);
-        cummulativeQuoteQty = Ezjsonm.(find fields ["cummulativeQuoteQty"] |> get_string |> float_of_string);
-        status = Ezjsonm.(find fields ["status"] |> get_string);
-        timeInForce = Ezjsonm.(find fields ["timeInForce"] |> get_string);
-        type_of_order = Ezjsonm.(find fields ["type"] |> get_string);
-        side = Ezjsonm.(find fields ["side"] |> get_string);
-        marginBuyBorrowAmount = Ezjsonm.(find fields ["marginBuyBorrowAmount"] |> get_float |> int_of_float);
-        marginBuyBorrowAsset = Ezjsonm.(find fields ["marginBuyBorrowAsset"] |> get_string);
-        isIsolated = Ezjsonm.(find fields ["isIsolated"] |> get_string);
-        selfTradePreventionMode = Ezjsonm.(find fields ["selfTradePreventionMode"] |> get_string);
-        fills =  get_fills (Ezjsonm.find fields ["fills"])
+    |`O[
+        ("symbol", `String symbol);
+        ("orderId", `Float order_id);
+        ("clientOrderId", `String client_order_id);
+        ("isIsolated", `Bool is_isolated);
+        ("transactTime", `Float transaction_time)
+      ] -> Ack {
+        symbol = Symbol.unwrap symbol;
+        order_id = int_of_float order_id;
+        client_order_id = client_order_id;
+        is_isolated = is_isolated;
+        transaction_time = int_of_float transaction_time
       }
+
+    |`O[
+        ("symbol", `String symbol);
+        ("orderId", `Float order_id);
+        ("clientOrderId", `String client_order_id);
+        ("transactTime", `Float transaction_time);
+        ("price", `String price);
+        ("origQty", `String orig_quantity);
+        ("executedQty", `String executed_quantity);
+        ("cummulativeQuoteQty", `String cummulative_quote_quantity);
+        ("status", `String status);
+        ("timeInForce", `String time_in_force);
+        ("type", `String order_type);
+        ("isIsolated", `Bool is_isolated);
+        ("side", `String side);
+        ("selfTradePrevetionMode", `String self_trade_prevention_mode)
+      ] -> Result {
+        symbol = Symbol.unwrap symbol;
+        order_id = int_of_float order_id;
+        client_order_id = client_order_id;
+        transaction_time = int_of_float transaction_time;
+        price = float_of_string price;
+        orig_quantity = float_of_string orig_quantity;
+        executed_quantity = float_of_string executed_quantity;
+        cummulative_quote_quantity = float_of_string cummulative_quote_quantity;
+        status = Order_status.unwrap status;
+        time_in_force = Time_in_force.unwrap time_in_force;
+        order_type = Order_types.unwrap order_type;
+        is_isolated = is_isolated;
+        side = Order_side.unwrap side;
+        self_trade_prevention_mode = self_trade_prevention_mode
+      }
+
+    |`O[
+        ("symbol", `String symbol);
+        ("orderId", `Float order_id);
+        ("clientOrderId", `String client_order_id);
+        ("transactTime", `Float transaction_time);
+        ("price", `String price);
+        ("origQty", `String orig_quantity);
+        ("executedQty", `String executed_quantity);
+        ("cummulativeQuoteQty", `String cummulative_quote_quantity);
+        ("status", `String status);
+        ("timeInForce", `String time_in_force);
+        ("type", `String order_type);
+        ("side", `String side);
+        ("marginBuyBorrowAmount", `Float margin_buy_borrow_amount);
+        ("marginBuyBorrowAsset", `String margin_buy_borrow_asset);
+        ("isIsolated", `Bool is_isolated);
+        ("selfTradePrevetionMode", `String self_trade_prevention_mode);
+        ("fills", fill_fields)
+      ] -> Full {
+        symbol = Symbol.unwrap symbol;
+        order_id = int_of_float order_id;
+        client_order_id = client_order_id;
+        transaction_time = int_of_float transaction_time;
+        price = float_of_string price;
+        orig_quantity = float_of_string orig_quantity;
+        executed_quantity = float_of_string executed_quantity;
+        cummulative_quote_quantity = float_of_string cummulative_quote_quantity;
+        status = Order_status.unwrap status;
+        time_in_force = Time_in_force.unwrap time_in_force;
+        order_type = Order_types.unwrap order_type;
+        is_isolated = is_isolated;
+        side = Order_side.unwrap side;
+        margin_buy_borrow_amount = int_of_float margin_buy_borrow_amount;
+        margin_buy_borrow_asset = margin_buy_borrow_asset;
+        self_trade_prevention_mode = self_trade_prevention_mode;
+        fills = get_fills fill_fields
+      }
+    |_ -> Error_code 
   ;;
 
   let parse_response json = 
     json >>= fun json' -> Lwt.return (get_data json');;
 
-  let new_order () = parse_response (Requests.post (Uri.of_string endpoint) headers);;
+  let place side type_of_order quantity price time_in_force new_order_resp_type = 
+    let parameters = let open P in [
+        ("symbol", Symbol.wrap symbol);
+        ("isIsolated", Binance_bool.wrap is_isolated);
+        ("side", Order_side.wrap side);
+        ("type", Order_types.wrap type_of_order);
+        ("quantity", string_of_float quantity);
+        ("quoteOrderQty", string_of_float quote_order_quantity);
+        ("price", string_of_float price);
+        ("stopPrice", string_of_float stop_price);
+        ("icebergQty", string_of_float iceberg_quantity);
+        ("newOrderRespType", Order_response.wrap new_order_resp_type);
+        ("sideEffectType", Side_effect_type.wrap side_effect_type);
+        ("timeInForce", Time_in_force.wrap time_in_force);
+        ("autoRepayAtCancel", Binance_bool.wrap auto_repay_at_cancel);
+        ("recvWindow", string_of_int recv_window)
+      ] 
+    in let url = Url.build_signed P.url "/sapi/v1/margin/order" parameters P.secret_key
+    in parse_response (Requests.post (Uri.of_string url) headers);;
 end
