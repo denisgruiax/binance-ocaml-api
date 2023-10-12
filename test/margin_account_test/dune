@@ -4,5 +4,5 @@
   binance_ocaml_api
   alcotest
   alcotest-lwt
-  close_order_test
+  cancel_order_test
   cross_margin_account_transfer_test))

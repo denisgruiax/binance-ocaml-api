@@ -10,7 +10,7 @@ module type Parameters = sig
   val recv_window : int
 end
 
-module type Close_order' = sig
+module type Cancel_order' = sig
   type t = {
     symbol: Symbol.t;
     is_isolated : bool;
@@ -27,10 +27,10 @@ module type Close_order' = sig
     side : Order_side.t
   };;
   
-  val close_order : bool -> int -> t option Lwt.t
+  val place : bool -> int -> t option Lwt.t
 end
 
-module Make(P : Parameters) : Close_order' = struct
+module Make(P : Parameters) : Cancel_order' = struct
   type t = {
     symbol: Symbol.t;
     is_isolated : bool;
@@ -91,7 +91,7 @@ module Make(P : Parameters) : Close_order' = struct
   let parse_response json = 
     json >>= fun json' -> Lwt.return (get_data json');;
 
-  let close_order is_isolated order_id = 
+  let place is_isolated order_id = 
     let parameters = parameters @ [("isIsolated", Binance_bool.wrap is_isolated)] @ [("orderId", string_of_int order_id)] in
     let url = Url.build_signed P.url "/sapi/v1/margin/order" parameters P.secret_key in
     parse_response (Requests.delete (Uri.of_string url) headers);;
