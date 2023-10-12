@@ -52,8 +52,6 @@ module Make(P : Parameters) : Cancel_order' = struct
       ("recvWindow", string_of_int recv_window)
     ];;
 
-  let endpoint = Url.build_signed P.url "/sapi/v1/margin/order" parameters P.secret_key;;
-
   let headers = Requests.create_header P.api_key;;
 
   let get_data (json : Ezjsonm.t) = match json with

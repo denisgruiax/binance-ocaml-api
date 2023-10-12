@@ -14,7 +14,7 @@ module Cancel_order' = Cancel_order.Make(struct
 
 (*Just a template*)
 let cancel_order () = let* _ = Cancel_order'.place false 28 in
-  Alcotest.(check bool "Test close order on BTCUSDT pair." true true);Lwt.return ();;
+  Alcotest.(check bool "Test close order on BTCUSDT pair." true true); Lwt.return ();;
 
 let test_close_order switch () = 
   Lwt_switch.add_hook (Some switch) cancel_order;Lwt.return ();;
