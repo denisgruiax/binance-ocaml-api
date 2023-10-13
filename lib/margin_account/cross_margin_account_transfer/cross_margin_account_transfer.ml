@@ -17,7 +17,7 @@ end
 module Make(P : Parameters) : Cross_margin_account_transfer' = struct
   let parameters = let open P in [
       ("asset", Symbol.wrap asset);
-      ("recvWindows", string_of_int recv_window)
+      ("recvWindow", string_of_int recv_window)
     ];;
 
   let headers = Requests.create_header P.api_key;;

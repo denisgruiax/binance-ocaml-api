@@ -8,7 +8,7 @@ module type Parameters = sig
   val recv_window : int
 end
 
-module type Close_order' = sig
+module type Cancel_order' = sig
   type t = {
     symbol: Symbol.t;
     is_isolated : bool;
@@ -25,7 +25,7 @@ module type Close_order' = sig
     side : Order_side.t
   }
 
-  val close_order : bool -> int -> t option Lwt.t
+  val place : bool -> int -> t option Lwt.t
 end
 
-module Make: functor(P : Parameters) -> Close_order' 
+module Make: functor(P : Parameters) -> Cancel_order' 

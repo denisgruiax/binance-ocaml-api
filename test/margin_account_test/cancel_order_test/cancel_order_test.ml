@@ -4,7 +4,7 @@ open Utilities;;
 
 open Variants.Symbol;;
 
-module Close_order' = Close_order.Make(struct
+module Cancel_order' = Cancel_order.Make(struct
     let url = Base_urls.api_default
     let api_key = "YOUR_API_KEY"
     let secret_key = "YOUR_SECRET_KEY"
@@ -13,11 +13,11 @@ module Close_order' = Close_order.Make(struct
   end);;
 
 (*Just a template*)
-let close_order () = let* _ = Close_order'.close_order false 28 in
-  Alcotest.(check bool "Test close order on BTCUSDT pair." true true);Lwt.return ();;
+let cancel_order () = let* _ = Cancel_order'.place false 28 in
+  Alcotest.(check bool "Test close order on BTCUSDT pair." true true); Lwt.return ();;
 
 let test_close_order switch () = 
-  Lwt_switch.add_hook (Some switch) close_order;Lwt.return ();;
+  Lwt_switch.add_hook (Some switch) cancel_order;Lwt.return ();;
 
 let suite () = "Close order on margin account", [
     Alcotest_lwt.test_case "Test close order on BTCUSDT pair." `Quick test_close_order

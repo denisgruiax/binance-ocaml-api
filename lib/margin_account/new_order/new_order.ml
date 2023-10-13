@@ -7,7 +7,6 @@ module type Parameters = sig
   val api_key : string
   val secret_key : string
   val symbol : Symbol.t
-  val is_isolated : bool
   val quote_order_quantity : float
   val stop_price : float
   val iceberg_quantity : float
@@ -71,7 +70,8 @@ module type New_order' = sig
 
   type response = Ack of ack_response | Result of result_response | Full of full_response | Error_code
 
-  val place : Order_side.t -> Order_types.t -> float -> float -> Time_in_force.t -> Order_response.t -> response Lwt.t
+  val market : Order_side.t -> float -> bool -> Order_response.t -> response Lwt.t
+  val limit : Order_side.t -> float -> float -> bool -> Order_response.t -> response Lwt.t
 end
 
 module Make(P : Parameters) : New_order' = struct
@@ -127,8 +127,6 @@ module Make(P : Parameters) : New_order' = struct
   };;
 
   type response = Ack of ack_response | Result of result_response | Full of full_response | Error_code;;
-
-  let headers = Requests.create_header P.api_key;;
 
   let get_fill = function
     |fields -> {
@@ -208,7 +206,7 @@ module Make(P : Parameters) : New_order' = struct
         ("marginBuyBorrowAsset", `String margin_buy_borrow_asset);
         ("isIsolated", `Bool is_isolated);
         ("selfTradePrevetionMode", `String self_trade_prevention_mode);
-        ("fills", fill_fields)
+        ("fills", fills)
       ] -> Full {
         symbol = Symbol.unwrap symbol;
         order_id = int_of_float order_id;
@@ -226,30 +224,47 @@ module Make(P : Parameters) : New_order' = struct
         margin_buy_borrow_amount = int_of_float margin_buy_borrow_amount;
         margin_buy_borrow_asset = margin_buy_borrow_asset;
         self_trade_prevention_mode = self_trade_prevention_mode;
-        fills = get_fills fill_fields
+        fills = get_fills fills
       }
-    |_ -> Error_code 
+    |_ -> Error_code
   ;;
 
   let parse_response json = 
     json >>= fun json' -> Lwt.return (get_data json');;
 
-  let place side type_of_order quantity price time_in_force new_order_resp_type = 
-    let parameters = let open P in [
-        ("symbol", Symbol.wrap symbol);
-        ("isIsolated", Binance_bool.wrap is_isolated);
+  let parameters = let open P in [
+      ("symbol", Symbol.wrap symbol);
+      ("quoteOrderQty", string_of_float quote_order_quantity);
+      ("stopPrice", string_of_float stop_price);
+      ("icebergQty", string_of_float iceberg_quantity);
+      ("sideEffectType", Side_effect_type.wrap side_effect_type);
+      ("autoRepayAtCancel", Binance_bool.wrap auto_repay_at_cancel);
+      ("recvWindow", string_of_int recv_window)
+    ]
+
+  let headers = Requests.create_header P.api_key;;
+
+  let market side quantity is_isolated response_type = 
+    let parameters = parameters @ [
         ("side", Order_side.wrap side);
-        ("type", Order_types.wrap type_of_order);
         ("quantity", string_of_float quantity);
-        ("quoteOrderQty", string_of_float quote_order_quantity);
+        ("isIsolated", Binance_bool.wrap is_isolated);
+        ("newOrderRespType", Order_response.wrap response_type);
+        ("type", Order_types.(wrap MARKET));
+        ("timeInForce", Time_in_force.(wrap GTC))
+      ] 
+    in let url = Url.build_signed P.url "/sapi/v1/margin/order" parameters P.secret_key
+    in parse_response (Requests.post (Uri.of_string url) headers);;
+
+  let limit side quantity price is_isolated response_type = 
+    let parameters = parameters @ [
+        ("side", Order_side.wrap side);
+        ("quantity", string_of_float quantity);
         ("price", string_of_float price);
-        ("stopPrice", string_of_float stop_price);
-        ("icebergQty", string_of_float iceberg_quantity);
-        ("newOrderRespType", Order_response.wrap new_order_resp_type);
-        ("sideEffectType", Side_effect_type.wrap side_effect_type);
-        ("timeInForce", Time_in_force.wrap time_in_force);
-        ("autoRepayAtCancel", Binance_bool.wrap auto_repay_at_cancel);
-        ("recvWindow", string_of_int recv_window)
+        ("isIsolated", Binance_bool.wrap is_isolated);
+        ("newOrderRespType", Order_response.wrap response_type);
+        ("type", Order_types.(wrap LIMIT));
+        ("timeInForce", Time_in_force.(wrap GTC))
       ] 
     in let url = Url.build_signed P.url "/sapi/v1/margin/order" parameters P.secret_key
     in parse_response (Requests.post (Uri.of_string url) headers);;
