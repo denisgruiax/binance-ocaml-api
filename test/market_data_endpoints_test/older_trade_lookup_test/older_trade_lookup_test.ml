@@ -5,7 +5,7 @@ open Variants.Symbol;;
 
 module Old_trade_lookup' = Old_trade_lookup.Make(struct
     let url = Base_urls.api_default
-    let symbol = Symbol "SOLUSDT"
+    let symbol = SYMBOL "SOLUSDT"
     let limit = 10
     let from_id = 0
   end)

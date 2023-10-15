@@ -1,4 +1,4 @@
-type t = Symbol of string | Symbols of string list;;
+type t = SYMBOL of string | SYMBOLS of string list;;
 
 val wrap : t -> string
 

@@ -6,7 +6,7 @@ open Variants.Chart_interval;;
 
 module BitcoinCandlesticks = Klines.Make(struct 
     let url = Base_urls.api_default 
-    let symbol = Symbol "BTCUSDT" 
+    let symbol = SYMBOL "BTCUSDT" 
     let interval = Minute 5
     let start_time = 0
     let end_time = 0
@@ -15,7 +15,7 @@ module BitcoinCandlesticks = Klines.Make(struct
 
 module MultiversXCandlesticks = Klines.Make(struct 
     let url = Base_urls.api_default
-    let symbol = Symbol "EGLDUSDT"
+    let symbol = SYMBOL "EGLDUSDT"
     let interval = Hour 1
     let start_time = 0
     let end_time = 0
@@ -24,7 +24,7 @@ module MultiversXCandlesticks = Klines.Make(struct
 
 module PolkadotCandlesticks = Klines.Make(struct
     let url = Base_urls.api_default
-    let symbol = Symbol "DOTUSDT"
+    let symbol = SYMBOL "DOTUSDT"
     let interval = Hour 4
     let start_time = 0
     let end_time = 0

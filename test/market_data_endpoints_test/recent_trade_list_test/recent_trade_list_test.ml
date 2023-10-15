@@ -4,7 +4,7 @@ open Lwt.Syntax;;
 open Variants.Symbol;;
 module Recent_trade_list' = Recent_trade_list.Make(struct
     let url = Base_urls.api_default
-    let symbol = Symbol "BNBUSDT"
+    let symbol = SYMBOL "BNBUSDT"
       let limit = 10
   end)
 

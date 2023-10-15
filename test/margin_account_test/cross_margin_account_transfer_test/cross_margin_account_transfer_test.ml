@@ -9,7 +9,7 @@ module Transfer = Cross_margin_account_transfer.Make(struct
     let url = Base_urls.api_default  
     let api_key = "YOUR_BINANCE_API_KEY"
     let secret_key = "YOUR_BINANCE_SECRET_KEY"
-    let asset = Symbol "SOL"
+    let asset = SYMBOL "SOL"
     let recv_window = 5000
   end)
 

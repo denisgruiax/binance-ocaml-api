@@ -5,7 +5,7 @@ open Variants.Symbol;;
 
 module Order_book'  = Order_book.Make(struct
     let url = Base_urls.api_default
-    let symbol = Symbol "EGLDUSDT"
+    let symbol = SYMBOL "EGLDUSDT"
     let limit = 10 
   end)
 
