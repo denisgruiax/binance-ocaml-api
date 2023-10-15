@@ -1,4 +1,4 @@
-type t = No_side_effect | Margin_buy | Auto_repay;;
+type t = NO_SIDE_EFFECT | MARGIN_BUY | AUTO_REPAY;;
 
 val wrap : t -> string
 
