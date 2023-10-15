@@ -1,10 +1,10 @@
-type t = To_cross_margin_account | To_main_account;;
+type t = MARGIN | SPOT;;
 
 let wrap = function
-  |To_cross_margin_account -> "1"
-  |To_main_account -> "2";;
+  |MARGIN -> "1"
+  |SPOT -> "2";;
 
 let unwrap = function
-  |"1" -> To_cross_margin_account
-  |"2" -> To_main_account
+  |"1" -> MARGIN
+  |"2" -> SPOT
   |_ -> raise Not_found;;

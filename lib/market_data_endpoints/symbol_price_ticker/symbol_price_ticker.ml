@@ -15,8 +15,8 @@ module Make(P : Parameters) : Price = struct
 
   let variant_to_parameter_pair symbols = let open Symbol in 
     match symbols with
-    |Symbol symbol -> ("symbol", symbol)
-    |Symbols symbols -> ("symbols", Symbol.wrap (Symbols symbols));;
+    |SYMBOL symbol -> ("symbol", symbol)
+    |SYMBOLS symbols -> ("symbols", Symbol.wrap (SYMBOLS symbols));;
 
   let parameters = let open P in [
       variant_to_parameter_pair symbol

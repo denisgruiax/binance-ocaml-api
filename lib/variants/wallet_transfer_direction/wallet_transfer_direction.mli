@@ -1,4 +1,4 @@
-type t = To_cross_margin_account | To_main_account
+type t = MARGIN | SPOT
 
 val wrap : t -> string
 

@@ -1,10 +1,10 @@
 type t =
-  |Second of int
-  |Minute of int
-  |Hour of int
-  |Day of int
-  |Week of int
-  |Month of int;;
+  |SECOND of int
+  |MINUTE of int
+  |HOUR of int
+  |DAY of int
+  |WEEK of int
+  |MONTH of int;;
 
 val wrap : t -> string
 

@@ -4,7 +4,7 @@ open Variants.Symbol;;
 
 module Bitcoin = Symbol_price_ticker.Make(struct 
     let url = Utilities.Base_urls.api_default
-    let symbol = Symbols ["\"BTCUSDT\""; "\"SOLUSDT\""]
+    let symbol = SYMBOLS ["\"BTCUSDT\""; "\"SOLUSDT\""]
   end);;
 
 let bitcoin_price () = let* symbols = Bitcoin.get_price ()

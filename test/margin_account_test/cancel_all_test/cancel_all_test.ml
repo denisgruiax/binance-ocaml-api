@@ -8,7 +8,7 @@ module Cancel_all' = Cancel_all.Make(struct
     let url = Base_urls.api_default
     let api_key = "YOUR_API_KEY"
     let secret_key = "YOUR_SECRET_KEY"
-    let symbol = Symbol "BTCUSDT"
+    let symbol = SYMBOL "BTCUSDT"
     let recv_window = 0
   end);;
 
