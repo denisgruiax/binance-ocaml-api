@@ -3,7 +3,7 @@
 (library
  (name utilities)
  (public_name utilities)
- (modules utilities crypto data requests url)
+ (modules utilities base_urls constants crypto data requests url)
  (libraries
   lwt
   lwt.unix
