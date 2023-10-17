@@ -10,7 +10,8 @@
   cross_margin_account_transfer
   margin_account_borrow
   margin_account_repay
-  new_order)
+  new_order
+  query_open_orders)
  (libraries
   lwt
   lwt.unix

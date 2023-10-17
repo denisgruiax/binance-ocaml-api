@@ -6,8 +6,14 @@ let get url =
   let* uri = Lwt.return (Uri.of_string url) 
   in let* (_, body) = Cohttp_lwt_unix.Client.get uri
   in let* body_string = Cohttp_lwt.Body.to_string body
-  in let* json = Lwt.return (Ezjsonm.from_string body_string)
-  in Lwt.return json
+  in let* json = Lwt.return(Ezjsonm.from_string body_string)
+  in Lwt.return json;;
+
+let get_signed uri headers =
+  let* (_, body) = Cohttp_lwt_unix.Client.get ~headers uri in
+  let* body_string = Cohttp_lwt.Body.to_string body in
+  let* json = Lwt.return(Ezjsonm.from_string body_string) in
+  Lwt.return json;;
 
 let post url headers = 
   let* (_, body) = Cohttp_lwt_unix.Client.post url ~headers ~body:(Cohttp_lwt.Body.empty)
