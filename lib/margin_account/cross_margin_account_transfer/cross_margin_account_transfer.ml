@@ -28,5 +28,5 @@ module Make(P : Parameters) : Cross_margin_account_transfer' = struct
   let place_transfer amount type_of_transfer = 
     let parameters = parameters @ [("amount", string_of_float amount); ("type", Wallet_transfer_direction.wrap type_of_transfer)] in
     let url = Url.build_signed P.url "/sapi/v1/margin/transfer" parameters P.secret_key in
-    let json = Requests.post (Uri.of_string url) in get_data (json headers);;
+    let json = Requests.post url in get_data (json headers);;
 end

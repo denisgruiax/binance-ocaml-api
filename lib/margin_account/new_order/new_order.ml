@@ -254,7 +254,7 @@ module Make(P : Parameters) : New_order' = struct
         ("timeInForce", Time_in_force.(wrap GTC))
       ] 
     in let url = Url.build_signed P.url "/sapi/v1/margin/order" parameters P.secret_key
-    in parse_response (Requests.post (Uri.of_string url) headers);;
+    in parse_response (Requests.post url headers);;
 
   let limit side quantity price is_isolated response_type = 
     let parameters = parameters @ [
@@ -267,5 +267,5 @@ module Make(P : Parameters) : New_order' = struct
         ("timeInForce", Time_in_force.(wrap GTC))
       ] 
     in let url = Url.build_signed P.url "/sapi/v1/margin/order" parameters P.secret_key
-    in parse_response (Requests.post (Uri.of_string url) headers);;
+    in parse_response (Requests.post url headers);;
 end
