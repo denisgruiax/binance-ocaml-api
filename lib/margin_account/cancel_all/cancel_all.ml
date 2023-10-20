@@ -32,5 +32,5 @@ module Make(P : Parameters) : Cancel_all' = struct
   let place is_isolated = 
     let parameters = parameters @ [("isIsolated", Binance_bool.wrap is_isolated)] in
     let url = Url.build_signed P.url "/sapi/v1/margin/openOrders" parameters P.secret_key in
-    parse_response (Requests.delete (Uri.of_string url) headers);;
+    parse_response (Requests.delete url headers);;
 end

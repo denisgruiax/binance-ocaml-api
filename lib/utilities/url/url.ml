@@ -8,16 +8,17 @@ let check_value value = match value with
 
 let create_payload = function
   |[] -> ""
-  |[(key, value)] -> "?" ^ key ^ "=" ^ value
-  |(key, value) :: tail -> "?" ^ key ^ "=" ^ value ^ List.fold_right (fun (key, value) res -> if check_value value then ("&" ^ key ^ "=" ^ value ^ res) else res) tail "";;
+  |[(key, value)] -> key ^ "=" ^ value
+  |(key, value) :: tail -> key ^ "=" ^ value ^ List.fold_right (fun (key, value) res -> if (check_value value) then ("&" ^ key ^ "=" ^ value ^ res) else res) tail "";;
 
 let build_public url endpoint parameters_with_keys =
   let payload = create_payload parameters_with_keys  
-  in url ^ endpoint ^ payload;;
+  in String.concat "" [url; endpoint; "?"; payload];;
 
-let build_signed url endpoint parameters_with_keys secret_key = 
-  let payload = create_payload parameters_with_keys 
-  in url ^ endpoint ^ payload ^ "&timestamp=" ^ (timestamp ()) ^"&signature=" ^ (Crypto.create_signature payload secret_key)
+let build_signed url endpoint parameters_with_keys secret_key =
+  let current_timestamp = timestamp ()
+  in let payload = create_payload (parameters_with_keys @ ["timestamp", current_timestamp])
+  in String.concat "" [url; endpoint; "?"; payload; "&signature="; (Crypto.create_signature payload secret_key)];;
 
 let check_limit minimum maximum default= function
   |limit when limit >= minimum && limit <= maximum -> limit

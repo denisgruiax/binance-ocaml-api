@@ -33,7 +33,7 @@ module Make(P : Parameters) : Margin_account_repay' = struct
         ("isIsolated", Binance_bool.wrap false)
       ] in
     let url = Url.build_signed P.url "/sapi/v1/margin/repay" parameters P.secret_key in
-    let json = Requests.post (Uri.of_string url) in get_data (json headers);;
+    let json = Requests.post url in get_data (json headers);;
 
   let isolated_repay symbol amount type_of_transfer =
     let parameters = parameters @ [
@@ -43,5 +43,5 @@ module Make(P : Parameters) : Margin_account_repay' = struct
         ("isIsolated", Binance_bool.wrap true)
       ] in
     let url = Url.build_signed P.url "/sapi/v1/margin/repay" parameters P.secret_key in
-    let json = Requests.post (Uri.of_string url) in get_data (json headers);;
+    let json = Requests.post url in get_data (json headers);;
 end

@@ -111,6 +111,6 @@ module Make(P : Parameters) : Query_open_orders' = struct
 
   let get is_isolated = 
     let parameters = parameters @ [("isIsolated", Binance_bool.wrap is_isolated)] in
-    let url = Url.build_signed P.url "" parameters P.secret_key in
-    parse_response (Requests.get_signed (Uri.of_string url) headers);;
+    let url = Url.build_signed P.url "/sapi/v1/margin/openOrders" parameters P.secret_key in
+    print_string url;parse_response (Requests.get_signed url headers);;
 end
