@@ -16,6 +16,7 @@
   lwt
   lwt.unix
   conduit-lwt-unix
+  decimal
   ezjsonm
   cohttp
   cohttp-lwt
