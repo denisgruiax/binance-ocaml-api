@@ -16,13 +16,13 @@ module BitcoinOrder = New_order.Make(struct
     let side = BUY
     let order_type = MARKET
     let time_in_force = GTC
-    let quantity = 1.0
-    let price = 0.0
-    let stop_price = 0.0
-    let iceberg_quantity = 0.0
+    let quantity = Decimal.of_string "1.0"
+    let price = Decimal.of_string "0.0"
+    let stop_price = Decimal.of_string "0.0"
+    let iceberg_quantity = Decimal.of_string "0.0"
     let new_order_response_type = FULL
     let recv_window = 0
-  end);; 
+  end);;
 
 let order_response_size () = let* json = BitcoinOrder.place_order () 
   in let* response = Lwt.return(Ezjsonm.to_string json) 

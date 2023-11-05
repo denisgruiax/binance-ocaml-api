@@ -13,10 +13,10 @@ module type Parameters = sig
   val side : Order_side.t
   val order_type : Order_types.t
   val time_in_force : Time_in_force.t
-  val quantity : float
-  val price : float
-  val stop_price : float
-  val iceberg_quantity : float
+  val quantity : Decimal.t
+  val price : Decimal.t
+  val stop_price : Decimal.t
+  val iceberg_quantity : Decimal.t
   val new_order_response_type : Order_response.t
   val recv_window : int
 end
@@ -31,8 +31,8 @@ module Make(P : Parameters) : Order = struct
       ("side", Order_side.wrap side);
       ("type", Order_types.wrap order_type);
       ("timeInForce", Time_in_force.wrap time_in_force);
-      ("quantity", string_of_float quantity);
-      ("price", string_of_float price);
+      ("quantity", Decimal.to_string quantity);
+      ("price", Decimal.to_string price);
       ("recvWindow", string_of_int recv_window);
     ];;
 

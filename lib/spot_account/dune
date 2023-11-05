@@ -8,6 +8,7 @@
   lwt
   lwt.unix
   cstruct
+  decimal
   nocrypto
   conduit-lwt-unix
   ezjsonm
