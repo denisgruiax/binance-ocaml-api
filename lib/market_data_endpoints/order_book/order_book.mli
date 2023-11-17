@@ -8,7 +8,7 @@ end
 
 module type Order_book' = sig
   type t = {
-    lastUpdateId : int;
+    last_update_id : int;
     bids_t : (float * float) list;
     asks_t : (float * float) list
   }

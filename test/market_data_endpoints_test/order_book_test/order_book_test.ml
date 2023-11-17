@@ -16,10 +16,10 @@ let check_pair (x, y) = match (x > 0.0, y > 0.0) with
 let check_list list_of_orders = List.fold_left (fun res elt -> (check_pair elt) && res) true list_of_orders;;
 
 let check_depth = let open Order_book' in function
-    |{lastUpdateId = val1; 
+    |{last_update_id = identifier; 
       bids_t = bids;
       asks_t = asks}
-      -> if (val1 > 0 && check_list bids && check_list asks) 
+      -> if (identifier > 0 && check_list bids && check_list asks) 
       then true else false;;
 
 let get_depth_data () = let* depth = Order_book'.get_depth () in

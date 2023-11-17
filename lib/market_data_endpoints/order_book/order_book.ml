@@ -10,7 +10,7 @@ end
 
 module type Order_book' = sig
   type t = {
-    lastUpdateId : int;
+    last_update_id : int;
     bids_t : (float * float) list;
     asks_t : (float * float) list
   }
@@ -20,7 +20,7 @@ end
 
 module Make(P : Parameters) : Order_book' = struct
   type t = {
-    lastUpdateId : int;
+    last_update_id : int;
     bids_t : (float * float) list;
     asks_t : (float * float) list
   };;
@@ -38,7 +38,7 @@ module Make(P : Parameters) : Order_book' = struct
 
   let get_depth_data = function
     |fields -> {
-        lastUpdateId = Ezjsonm.find fields ["lastUpdateId"] |> Ezjsonm.get_float |> int_of_float;
+        last_update_id = Ezjsonm.find fields ["lastUpdateId"] |> Ezjsonm.get_float |> int_of_float;
         bids_t = Ezjsonm.find fields ["bids"] |> Data.get_list_from_list get_data;
         asks_t = Ezjsonm.find fields ["asks"] |> Data.get_list_from_list get_data
       };;
