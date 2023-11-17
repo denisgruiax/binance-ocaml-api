@@ -13,10 +13,10 @@ module type Recent_trade_list' = sig
     id : int;
     price : float;
     qty : float;
-    quoteQty : float;
+    quote_quantity : float;
     time : int;
-    isBuyerMaker : bool;
-    isBestMatch : bool
+    is_buyer_maker : bool;
+    is_best_match : bool
   }
 
   val get_recent_trade_list : unit -> t list Lwt.t
@@ -27,10 +27,10 @@ module Make(P : Parameters) : Recent_trade_list' = struct
     id : int;
     price : float;
     qty : float;
-    quoteQty : float;
+    quote_quantity : float;
     time : int;
-    isBuyerMaker : bool;
-    isBestMatch : bool
+    is_buyer_maker : bool;
+    is_best_match : bool
   };;
 
   let parameters = let open P in [
@@ -46,10 +46,10 @@ module Make(P : Parameters) : Recent_trade_list' = struct
           id = int_of_float (Ezjsonm.(find fields ["id"] |> get_float));
           price = float_of_string Ezjsonm.(find fields ["price"] |> get_string);
           qty = float_of_string  Ezjsonm.(find fields ["qty"] |> get_string);
-          quoteQty = float_of_string  Ezjsonm.(find fields ["quoteQty"] |> get_string);
+          quote_quantity = float_of_string  Ezjsonm.(find fields ["quoteQty"] |> get_string);
           time = int_of_float (Ezjsonm.(find fields ["time"] |> get_float));
-          isBuyerMaker = Ezjsonm.(find fields ["isBuyerMaker"] |> get_bool);
-          isBestMatch = Ezjsonm.(find fields ["isBestMatch"] |> get_bool);
+          is_buyer_maker = Ezjsonm.(find fields ["isBuyerMaker"] |> get_bool);
+          is_best_match = Ezjsonm.(find fields ["isBestMatch"] |> get_bool);
         }
 
   let parse_recent_trade_list json = 

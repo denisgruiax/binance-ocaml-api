@@ -11,10 +11,10 @@ module type Recent_trade_list' = sig
     id : int;
     price : float;
     qty : float;
-    quoteQty : float;
+    quote_quantity : float;
     time : int;
-    isBuyerMaker : bool;
-    isBestMatch : bool
+    is_buyer_maker : bool;
+    is_best_match : bool
   }
 
   val get_recent_trade_list : unit -> t list Lwt.t
