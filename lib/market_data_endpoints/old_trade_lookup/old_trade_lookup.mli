@@ -12,10 +12,10 @@ module type Old_trade_lookup' = sig
     id : int;
     price : float;
     qty : float;
-    quoteQty : float;
+    quote_quantity : float;
     time : int;
-    isBuyerMaker : bool;
-    isBestMatch : bool
+    is_buyer_maker : bool;
+    is_best_match : bool
   }
 
   val get_older_trades : unit -> t list Lwt.t

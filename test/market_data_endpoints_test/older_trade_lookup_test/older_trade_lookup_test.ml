@@ -15,10 +15,10 @@ let check_trade = let open Old_trade_lookup' in function
       id = val1;
       price = val2;
       qty = val3;
-      quoteQty = val4;
+      quote_quantity = val4;
       time = val5;
-      isBuyerMaker = _;
-      isBestMatch = _
+      is_buyer_maker = _;
+      is_best_match = _
     } -> match (val1 > 0, val2 > 0.0, val3 > 0.0, val4 > 0.0, val5 > 0) with
       |(true, true, true, true, true) -> true
       |_ -> false;;
