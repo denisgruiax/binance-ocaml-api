@@ -2,8 +2,8 @@ open Binance_ocaml_api.Spot_account;;
 open Lwt.Syntax;;
 open Utilities;;
 
-let api_key = "Your api key";;
-let secret_key = "Your secret key";;
+let api_key = "API_KEY";;
+let secret_key = "SECRET_KEY";;
 
 let base_url = Base_urls.api_default;;
 let endpoint = "/api/v3/account";;
