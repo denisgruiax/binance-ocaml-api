@@ -33,6 +33,12 @@
  (depends ocaml dune))
 
 (package
+ (name records)
+ (synopsis
+  "Contains modules for holding the responses from Binance API inside records")
+ (depends ocaml dune))
+
+(package
  (name spot_account)
  (synopsis
   "Contains modules for interacting with the spot wallet of a Binance account.")

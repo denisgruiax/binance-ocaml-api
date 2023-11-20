@@ -6,6 +6,7 @@
  (libraries
   margin_account
   market_data_endpoints
+  records
   spot_account
   utilities
   variants))

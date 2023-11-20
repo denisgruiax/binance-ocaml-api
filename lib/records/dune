@@ -1,0 +1,9 @@
+(include_subdirs unqualified)
+
+(library
+ (name records)
+ (public_name records)
+ (modules records)
+ (libraries)
+ (flags
+  (:standard -w -34-37-67)))
