@@ -128,7 +128,8 @@ let get_data = function
 let parse_response json = 
   json >>= fun json' -> Lwt.return(get_data json');;
 
-let get_account base_url endpoint api_key secret_key parameters = let url = Url.build_signed base_url endpoint parameters secret_key in
+let get_account base_url endpoint api_key secret_key parameters = 
+  let url = Url.build_signed base_url endpoint parameters secret_key in
   parse_response (Requests.get_signed url (Requests.create_header api_key));;
 
 let print_account = function

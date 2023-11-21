@@ -1,33 +1,27 @@
 open Binance_ocaml_api.Spot_account;;
 open Lwt.Syntax;;
 open Utilities;;
+open Variants;;
 
-open Variants.Symbol;;
-open Variants.Order_side;;
-open Variants.Order_types;;
-open Variants.Time_in_force;;
-open Variants.Order_response;;
+let base_url = "https://testnet.binance.vision/api";;
+let endpoint = "/api/v3/order";;
+let api_key =  "";;
+let secret_key =  "";;
+let parameters = [
+  ("symbol", "BTCUSDT");
+  ("side", Order_side.wrap BUY);
+  ("type", Order_types.wrap MARKET);
+  ("quantity", "1.2")
+]
 
-module BitcoinOrder = New_order.Make(struct
-    let api_key = "YOUR_API_KEY"
-    let secret_key = "YOUR_SECRET_KEY"
-    let url = Base_urls.api_default
-    let symbol = SYMBOL "ICPUSDT"
-    let side = BUY
-    let order_type = MARKET
-    let time_in_force = GTC
-    let quantity = Decimal.of_string "1.0"
-    let price = Decimal.of_string "0.0"
-    let stop_price = Decimal.of_string "0.0"
-    let iceberg_quantity = Decimal.of_string "0.0"
-    let new_order_response_type = FULL
-    let recv_window = 0
-  end);;
+let send_order () = 
+  let* response = New_order.send ~base_url:base_url ~endpoint:endpoint ~api_key:api_key ~secret_key:secret_key ~order_response:ACK ~parameters:parameters in
 
-let order_response_size () = let* json = BitcoinOrder.place_order () 
-  in let* response = Lwt.return(Ezjsonm.to_string json) 
-  in Alcotest.(check bool "Order response length" ((String.length response > 10)) true);
-  Lwt.return ();;
+
+  let order_response_size () = let* json = BitcoinOrder.place_order () 
+    in let* response = Lwt.return(Ezjsonm.to_string json) 
+    in Alcotest.(check bool "Order response length" ((String.length response > 10)) true);
+    Lwt.return ();;
 
 let test_order_response_size switch () = 
   Lwt_switch.add_hook (Some switch) order_response_size;Lwt.return ();;

@@ -36,7 +36,9 @@ type full = {
   fills : fill option list
 };;
 
-type response = ACK of ack | RESULT of result | FULL of full;;
+type response = ACK of ack option | RESULT of result option | FULL of full option;;
+
+type lwt_response = ACK of ack option Lwt.t | RESULT of result option Lwt.t | FULL of full option Lwt.t
 
 let get_fill = function
   |`O[
