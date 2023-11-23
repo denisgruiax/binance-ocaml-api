@@ -1,19 +1,7 @@
 open Utilities;;
 open Lwt.Infix;;
 
-module type Parameters = sig
-  val  url : string
-end
+let json_to_time json = json >>= fun json' -> Lwt.return Ezjsonm.(get_int (find json' ["serverTime"]));;
 
-module type Server_time' = sig
-  val endpoint : string
-  val get_server_time : unit -> int Lwt.t
-end
-
-module Make(P : Parameters) : Server_time' = struct
-  let endpoint = P.url ^ "/api/v3/time"
-
-  let json_to_time json = json >>= fun json' -> Lwt.return Ezjsonm.(get_int (find json' ["serverTime"]));;
-
-  let get_server_time () = json_to_time (Requests.get endpoint);;
-end
+let get ~base_url:base_url ~endpoint:endpoint = let url = String.concat "" [base_url; endpoint] in
+  json_to_time (Requests.get url);;
