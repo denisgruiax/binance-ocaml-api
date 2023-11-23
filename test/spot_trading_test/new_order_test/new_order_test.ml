@@ -1,4 +1,4 @@
-open Binance_ocaml_api.Spot_account;;
+open Binance_ocaml_api.Spot_trading;;
 open Lwt.Syntax;;
 open Variants;;
 

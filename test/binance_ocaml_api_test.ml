@@ -14,7 +14,7 @@ let library_unit_testing () =
     Market_data_endpoints_test.Test_connectivity_test.suite ();
 
     Spot_account_test.Account_test.suite ();
-    Spot_account_test.New_order_test.suite ();
+    Spot_trading_test.New_order_test.suite ();
 
     Utilities_test.suite ()
   ];;

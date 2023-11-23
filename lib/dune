@@ -8,5 +8,6 @@
   market_data_endpoints
   records
   spot_account
+  spot_trading
   utilities
   variants))
