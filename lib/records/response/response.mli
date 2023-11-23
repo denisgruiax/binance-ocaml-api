@@ -1,4 +1,5 @@
 open Variants
+open Error_code;;
 
 type fill = {
   price : Decimal.t;
@@ -35,9 +36,7 @@ type full = {
   fills : fill option list
 }
 
-type response = ACK of ack option | RESULT of result option | FULL of full option
-
-type lwt_response = ACK of ack option Lwt.t | RESULT of result option Lwt.t | FULL of full option Lwt.t
+type response = ACK of ack option | RESULT of result option | FULL of full option | ERROR_CODE of error_code option;;
 
 val get_fill : [> Ezjsonm.t] -> fill option
 val print_fill : fill option -> unit Lwt.t
@@ -51,3 +50,6 @@ val print_result : result option -> unit Lwt.t
 
 val get_full : [> Ezjsonm.t] -> full option
 val print_full : full option -> unit Lwt.t
+
+val get : [> Ezjsonm.t] -> response
+val print : response -> unit Lwt.t

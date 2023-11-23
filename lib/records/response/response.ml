@@ -1,5 +1,6 @@
 open Variants;;
 open Utilities;;
+open Error_code;;
 
 type fill = {
   price : Decimal.t;
@@ -36,9 +37,7 @@ type full = {
   fills : fill option list
 };;
 
-type response = ACK of ack option | RESULT of result option | FULL of full option;;
-
-type lwt_response = ACK of ack option Lwt.t | RESULT of result option Lwt.t | FULL of full option Lwt.t
+type response = ACK of ack option | RESULT of result option | FULL of full option | ERROR_CODE of error_code option;;
 
 let get_fill = function
   |`O[
@@ -78,7 +77,7 @@ let get_ack = function
       ("orderListId", `Float order_list_id);
       ("clientOrderId", `String client_order_id);
       ("transactTime", `Float transact_time);
-    ] -> Some {
+    ] -> Some { (*Here add Some Ack {ack} or Ack {ack}*)
       symbol = Symbol.unwrap symbol;
       order_id = Decimal.of_int (int_of_float order_id);
       order_list_id = Decimal.of_int (int_of_float order_list_id);
@@ -100,7 +99,7 @@ let print_ack = function
         let* () = printf "order_id = %s\n" (Decimal.to_string order_id) in
         let* () = printf "order_list_id = %s\n" (Decimal.to_string order_list_id) in
         let* () = printf "client_order_id = %s\n" client_order_id in
-        let* () = printf "transact_time = %s\n" (Decimal.to_string transact_time) in
+        let* () = printf "transact_time = %s\n\n" (Decimal.to_string transact_time) in
         Lwt.return ()
     end
   |None -> Lwt.return ();;
@@ -228,3 +227,111 @@ let print_full = function
         Lwt.return ()
     end
   |None -> Lwt.return ();;
+
+let get = function
+  |`O[
+      ("symbol", `String symbol);
+      ("orderId", `Float order_id);
+      ("orderListId", `Float order_list_id);
+      ("clientOrderId", `String client_order_id);
+      ("transactTime", `Float transact_time);
+    ] -> ACK (Some { (*Here add Some Ack {ack} or Ack {ack}*)
+      symbol = Symbol.unwrap symbol;
+      order_id = Decimal.of_int (int_of_float order_id);
+      order_list_id = Decimal.of_int (int_of_float order_list_id);
+      client_order_id = client_order_id;
+      transact_time = Decimal.of_int (int_of_float transact_time)
+    })
+
+  |`O[
+      ("symbol", `String symbol);
+      ("orderId", `Float order_id);
+      ("orderListId", `Float order_list_id);
+      ("clientOrderId", `String client_order_id);
+      ("transactTime", `Float transact_time);
+      ("price", `String price);
+      ("origQty", `String orig_qty);
+      ("executedQty", `String executed_qty);
+      ("cummulativeQuoteQty", `String cummulative_quote_qty);
+      ("status", `String status);
+      ("timeInForce", `String time_in_force);
+      ("type", `String order_type);
+      ("side", `String side);
+      ("workingTime", `Float working_time);
+      ("selfTradePreventionMode", `String self_trade_prevention_mode);
+    ] -> RESULT (Some {
+      ack = get_ack (`O[
+          ("symbol", `String symbol);
+          ("orderId", `Float order_id);
+          ("orderListId", `Float order_list_id);
+          ("clientOrderId", `String client_order_id);
+          ("transactTime", `Float transact_time);
+        ]);
+
+      price = Decimal.of_string price;
+      orig_qty = Decimal.of_string orig_qty;
+      executed_qty = Decimal.of_string executed_qty;
+      cummulative_quote_qty = Decimal.of_string cummulative_quote_qty;
+      status = Order_status.unwrap status;
+      time_in_force = Time_in_force.unwrap time_in_force;
+      order_type = Order_types.unwrap order_type;
+      side = Order_side.unwrap side;
+      working_time = Decimal.of_int (int_of_float working_time);
+      self_trade_prevention_mode = self_trade_prevention_mode
+    })
+
+  |`O[
+      ("symbol", `String symbol);
+      ("orderId", `Float order_id);
+      ("orderListId", `Float order_list_id);
+      ("clientOrderId", `String client_order_id);
+      ("transactTime", `Float transact_time);
+      ("price", `String price);
+      ("origQty", `String orig_qty);
+      ("executedQty", `String executed_qty);
+      ("cummulativeQuoteQty", `String cummulative_quote_qty);
+      ("status", `String status);
+      ("timeInForce", `String time_in_force);
+      ("type", `String order_type);
+      ("side", `String side);
+      ("workingTime", `Float working_time);
+      ("selfTradePreventionMode", `String self_trade_prevention_mode);
+      ("fills", fills)
+    ] -> FULL (Some {
+      result = get_result (
+          `O[
+            ("symbol", `String symbol);
+            ("orderId", `Float order_id);
+            ("orderListId", `Float order_list_id);
+            ("clientOrderId", `String client_order_id);
+            ("transactTime", `Float transact_time);
+            ("price", `String price);
+            ("origQty", `String orig_qty);
+            ("executedQty", `String executed_qty);
+            ("cummulativeQuoteQty", `String cummulative_quote_qty);
+            ("status", `String status);
+            ("timeInForce", `String time_in_force);
+            ("type", `String order_type);
+            ("side", `String side);
+            ("workingTime", `Float working_time);
+            ("selfTradePreventionMode", `String self_trade_prevention_mode);
+          ]);
+
+      fills = Data.get_list get_fill fills
+    })
+
+  |`O[
+      ("code", `Float code);
+      ("msg", `String msg)
+    ] -> ERROR_CODE (Some {
+      code = Decimal.of_int (int_of_float code);
+      msg = msg
+    })
+
+  |_ -> ERROR_CODE None;;
+
+let print = function
+  |ACK ack -> print_ack ack
+  |RESULT result -> print_result result
+  |FULL full -> print_full full
+  |ERROR_CODE error_code -> Error_code.print error_code;;
