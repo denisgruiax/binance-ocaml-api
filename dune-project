@@ -33,7 +33,7 @@
  (depends ocaml dune))
 
 (package
- (name records)
+ (name response)
  (synopsis
   "Contains modules for holding the responses from Binance API inside records")
  (depends ocaml dune))

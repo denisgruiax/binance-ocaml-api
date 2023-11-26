@@ -13,7 +13,7 @@ let get = function
     }
   |_ -> None;;
 
-let print = function
+let printl = function
   |Some {
       code = code;
       msg = msg

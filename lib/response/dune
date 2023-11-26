@@ -1,9 +1,9 @@
 (include_subdirs unqualified)
 
 (library
- (name records)
- (public_name records)
- (modules records error_code response)
+ (name response)
+ (public_name response)
+ (modules response error_code)
  (libraries decimal lwt utilities variants)
  (flags
   (:standard -w -32-34-37-67-69)))

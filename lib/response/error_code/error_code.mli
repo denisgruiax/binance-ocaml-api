@@ -4,4 +4,4 @@ type error_code = {
 };;
 
 val get : [> Ezjsonm.t] -> error_code option
-val print : error_code option -> unit Lwt.t
+val printl : error_code option -> unit Lwt.t

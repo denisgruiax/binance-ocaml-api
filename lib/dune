@@ -6,7 +6,7 @@
  (libraries
   margin_account
   market_data_endpoints
-  records
+  response
   spot_account
   spot_trading
   utilities
