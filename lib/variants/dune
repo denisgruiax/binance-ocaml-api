@@ -8,6 +8,7 @@
   account_symbol_permissions
   allocation_type
   binance_bool
+  cancel_restrictions
   chart_interval
   contingency_type
   oco_order_status

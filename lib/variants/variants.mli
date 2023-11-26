@@ -1,6 +1,7 @@
 module Account_symbol_permissions = Account_symbol_permissions
 module Allocation_type = Allocation_type
 module Binance_bool = Binance_bool
+module Cancel_restrictions = Cancel_restrictions
 module Chart_interval = Chart_interval
 module Contingency_type = Contingency_type
 module Oco_order_status = Oco_order_status
