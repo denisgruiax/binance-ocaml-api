@@ -56,4 +56,4 @@ let print_list t_list = Lwt_list.iter_s (printl) t_list;;
 let parse_recent_trade_list json = 
   json >>= fun json' -> Lwt.return (Data.get_list get_data json');;
 
-let get ~base_url:base_url ~endpoint:endpoint ~parameters:parameters  = parse_recent_trade_list (Requests.get (Url.build_public base_url endpoint parameters));;
+let get ~base_url:base_url ~endpoint:endpoint ~parameters:parameters = parse_recent_trade_list (Requests.get (Url.build_public base_url endpoint parameters));;

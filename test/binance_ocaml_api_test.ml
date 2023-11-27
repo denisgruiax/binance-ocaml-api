@@ -6,7 +6,7 @@ let library_unit_testing () =
     Margin_account_test.Cancel_all_test.suite ();
     Market_data_endpoints_test.Current_average_price_test.suite ();
     Market_data_endpoints_test.Klines_test.suite ();
-    Market_data_endpoints_test.Older_trade_lookup_test.suite ();
+    Market_data_endpoints_test.Old_trade_lookup_test.suite ();
     Market_data_endpoints_test.Order_book_test.suite ();
     Market_data_endpoints_test.Recent_trade_list_test.suite ();
     Market_data_endpoints_test.Server_time_test.suite ();

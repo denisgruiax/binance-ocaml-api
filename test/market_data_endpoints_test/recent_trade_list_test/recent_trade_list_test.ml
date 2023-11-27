@@ -29,10 +29,7 @@ let parameters = [
 ];;
 
 let get_recent_trade_list () = let* recent_trades = Recent_trade_list.get ~base_url:base_url ~endpoint:endpoint ~parameters:parameters in
-  let* () = Recent_trade_list.print_list recent_trades in  
   Alcotest.(check bool "Test recent trade list." true (check_list recent_trades));Lwt.return ();;
-
-Lwt_main.run (get_recent_trade_list ());;
 
 let test_get_recent_trade_list switch () =
   Lwt_switch.add_hook (Some switch) get_recent_trade_list;Lwt.return ();;
