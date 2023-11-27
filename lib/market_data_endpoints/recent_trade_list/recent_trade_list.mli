@@ -1,23 +1,17 @@
-open Variants;;
+type t = {
+  id : Decimal.t;
+  price : Decimal.t;
+  qty : Decimal.t;
+  quote_qty : Decimal.t;
+  time : Decimal.t;
+  is_buyer_maker : bool;
+  is_best_match : bool
+};;
 
-module type Parameters = sig
-  val url : string
-  val symbol : Symbol.t
-  val limit : int
-end
+val get_data : [> Ezjsonm.t] -> t option
 
-module type Recent_trade_list' = sig
-  type t = {
-    id : int;
-    price : float;
-    qty : float;
-    quote_quantity : float;
-    time : int;
-    is_buyer_maker : bool;
-    is_best_match : bool
-  }
+val printl : t option -> unit Lwt.t
 
-  val get_recent_trade_list : unit -> t list Lwt.t
-end
+val print_list : t option list -> unit Lwt.t
 
-module Make : functor (P : Parameters) -> Recent_trade_list' 
+val get : base_url:string -> endpoint:string -> parameters:(string * string) list -> t option list Lwt.t
