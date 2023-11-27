@@ -1,15 +1,6 @@
-module type Parameters = sig
-  val url : string
-  val symbol : string
-end
+type t = {
+  mins : Decimal.t;
+  price : Decimal.t
+};;
 
-module type Current_average_price' = sig
-  type t = {
-    mins : int;
-    price : float
-  }
-
-  val get_current_average_price : unit -> t Lwt.t
-end
-
-module Make : functor (P : Parameters) -> Current_average_price'
+val get : base_url:string -> endpoint:string -> parameters:(string * string) list -> t option Lwt.t

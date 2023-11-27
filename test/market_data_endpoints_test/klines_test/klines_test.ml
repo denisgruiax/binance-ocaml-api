@@ -1,51 +1,43 @@
 open Binance_ocaml_api.Market_data_endpoints
 open Utilities;;
 open Lwt.Syntax;;
-open Variants.Symbol;;
-open Variants.Chart_interval;;
 
-module BitcoinCandlesticks = Klines.Make(struct 
-    let url = Base_urls.api_default 
-    let symbol = SYMBOL "BTCUSDT" 
-    let interval = MINUTE 5
-    let start_time = 0
-    let end_time = 0
-    let limit = 100
-  end);;
+let url = Base_urls.api_default;;
+let endpoint = Endpoints.Market_data.klines;;
 
-module MultiversXCandlesticks = Klines.Make(struct 
-    let url = Base_urls.api_default
-    let symbol = SYMBOL "EGLDUSDT"
-    let interval = HOUR 1
-    let start_time = 0
-    let end_time = 0
-    let limit = 500
-  end);;
+let btcusdt_parameters = [
+  ("symbol", "BTCUSDT");
+  ("interval", "5m");
+  ("limit", "100")
+];;
 
-module PolkadotCandlesticks = Klines.Make(struct
-    let url = Base_urls.api_default
-    let symbol = SYMBOL "DOTUSDT"
-    let interval = HOUR 4
-    let start_time = 0
-    let end_time = 0
-    let limit  = 1000  
-  end);; 
+let egldusdt_parameters = [
+  ("symbol", "EGLDUSDT");
+  ("interval", "5m");
+  ("limit", "500")
+];;
 
-let bitcoin_candlesticks_size () = let* candlesticks = BitcoinCandlesticks.get_candlesticks ()
-  in Alcotest.(check int "Bitcoin number of candlesticks.") 100 (List.length candlesticks);
-  Lwt.return ();;
+let dotusdt_parameters = [
+  ("symbol", "DOTUSDT");
+  ("interval", "5m");
+  ("limit", "1000")
+];;
+
+let bitcoin_candlesticks_size () = let* candlesticks = Klines.get_candlesticks ~base_url:url ~endpoint:endpoint ~parameters:btcusdt_parameters
+in Alcotest.(check int "Bitcoin number of candlesticks.") 100 (List.length candlesticks);
+Lwt.return ();;
 
 let test_bitcoin_candlesticks_size switch () =
   Lwt_switch.add_hook (Some switch) bitcoin_candlesticks_size;Lwt.return ();;
 
-let multiversx_candlesticks_size () = let* candlesticks = MultiversXCandlesticks.get_candlesticks ()
+let multiversx_candlesticks_size () = let* candlesticks = Klines.get_candlesticks ~base_url:url ~endpoint:endpoint ~parameters:egldusdt_parameters
   in Alcotest.(check int "Multiversx number of candlesticks.") 500 (List.length candlesticks);
   Lwt.return ();;
 
 let test_multiversx_candlesticks_size switch () =
   Lwt_switch.add_hook (Some switch) multiversx_candlesticks_size;Lwt.return ();;
 
-let polkadot_candlesticks_size () =  let* candlesticks = PolkadotCandlesticks.get_candlesticks ()
+let polkadot_candlesticks_size () =  let* candlesticks = Klines.get_candlesticks ~base_url:url ~endpoint:endpoint ~parameters:dotusdt_parameters
   in Alcotest.(check int "Polkadot number of candlesticks.") 1000 (List.length candlesticks);
   Lwt.return ();;
 
