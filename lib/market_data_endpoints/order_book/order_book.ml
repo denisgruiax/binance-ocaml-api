@@ -1,50 +1,30 @@
 open Utilities;;
 open Lwt.Infix;;
-open Variants;;
 
-module type Parameters = sig
-  val url : string
-  val symbol : Symbol.t
-  val limit : int
-end
+type t = {
+  last_update_id : Decimal.t;
+  bids : (Decimal.t * Decimal.t) list;
+  asks : (Decimal.t * Decimal.t) list
+};;
 
-module type Order_book' = sig
-  type t = {
-    last_update_id : int;
-    bids_t : (float * float) list;
-    asks_t : (float * float) list
-  }
+let get_data = let open Decimal in function 
+    |[`String val1; `String val2] -> (of_string val1 , of_string val2)
+    |_ -> (zero, zero) ;;
 
-  val get_depth : unit -> t Lwt.t
-end
+let get_depth_data = function
+  |`O[
+      ("lastUpdateId", `Float last_update_id);
+      ("bids", bids);
+      ("asks", asks)
+    ] -> Some {
+      last_update_id = Decimal.of_string (string_of_float last_update_id);
+      bids = Data.get_list_from_list get_data bids;
+      asks = Data.get_list_from_list get_data asks        
+    }
+  |_ -> None;;
 
-module Make(P : Parameters) : Order_book' = struct
-  type t = {
-    last_update_id : int;
-    bids_t : (float * float) list;
-    asks_t : (float * float) list
-  };;
+let parse_depth_data json = 
+  json >>= fun json' -> Lwt.return(get_depth_data json');; 
 
-  let parameters = let open P in [
-      ("symbol", Symbol.wrap symbol);
-      ("limit", string_of_int(Url.check_limit 1 5000 100 limit))
-    ];;
-
-  let endpoint = Url.build_public P.url "/api/v3/depth" parameters;; 
-
-  let get_data = function 
-    |[`String val1; `String val2] -> (float_of_string val1 , float_of_string val2)
-    |_ -> (0.0, 0.0) ;;
-
-  let get_depth_data = function
-    |fields -> {
-        last_update_id = Ezjsonm.find fields ["lastUpdateId"] |> Ezjsonm.get_float |> int_of_float;
-        bids_t = Ezjsonm.find fields ["bids"] |> Data.get_list_from_list get_data;
-        asks_t = Ezjsonm.find fields ["asks"] |> Data.get_list_from_list get_data
-      };;
-
-  let parse_depth_data json = 
-    json >>= fun json' -> Lwt.return(get_depth_data json');; 
-
-  let get_depth () = parse_depth_data (Requests.get endpoint);;
-end
+let get_depth ~base_url:base_url ~endpoint:endpoint ~parameters:parameters = 
+  parse_depth_data (Requests.get (Url.build_public base_url endpoint parameters));;
