@@ -2,11 +2,9 @@ open Binance_ocaml_api.Market_data_endpoints;;
 open Utilities;;
 open Lwt.Syntax;;
 
-module Connectivity = Test_connectivity.Make(struct let url = Base_urls.api_default end);;
-
 let server_connectivity () = 
-  let* connectivity = Connectivity.test_connectivity ()
-  in Alcotest.(check string "Test server connectivity." "{}" connectivity); Lwt.return ();;
+  let* connectivity = Test_connectivity.get ~base_url:Base_urls.api_default ~endpoint:Endpoints.Market_data.test_connectivity
+in Alcotest.(check string "Test server connectivity." "{}" connectivity); Lwt.return ();;
 
 let test_server_connectivity switch () = 
   Lwt_switch.add_hook (Some switch) server_connectivity ; Lwt.return ();;

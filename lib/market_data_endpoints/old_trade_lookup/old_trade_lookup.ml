@@ -1,60 +1,59 @@
 open Utilities;;
 open Lwt.Infix;;
-open Variants;;
-module type Parameters = sig
-  val url : string
-  val symbol : Symbol.t
-  val limit : int
-  val from_id : int
-end
+open Lwt.Syntax;;
 
-module type Old_trade_lookup' = sig
-  type t = {
-    id : int;
-    price : float;
-    qty : float;
-    quoteQty : float;
-    time : int;
-    isBuyerMaker : bool;
-    isBestMatch : bool
-  }
+type t = {
+  id : Decimal.t;
+  price : Decimal.t;
+  qty : Decimal.t;
+  quote_qty : Decimal.t;
+  time : Decimal.t;
+  is_buyer_maker : bool;
+  is_best_match : bool
+};;
 
-  val get_older_trades : unit -> t list Lwt.t
-end
+let get_data = function
+  |`O[
+      ("id", `Float id);
+      ("price", `String price);
+      ("qty", `String qty);
+      ("quoteQty", `String quote_qty);
+      ("time", `Float time);
+      ("isBuyerMaker", `Bool is_buyer_maker);
+      ("isBestMatch", `Bool is_best_match);
+    ] -> Some {
+      id = Decimal.of_string (string_of_float id);
+      price = Decimal.of_string price;
+      qty = Decimal.of_string qty;
+      quote_qty = Decimal.of_string quote_qty;
+      time = Decimal.of_string (string_of_float time);
+      is_buyer_maker = is_buyer_maker;
+      is_best_match = is_best_match
+    }
+  |_ -> None;;
 
-module Make(P : Parameters) : Old_trade_lookup' = struct
-  type t = {
-    id : int;
-    price : float;
-    qty : float;
-    quoteQty : float;
-    time : int;
-    isBuyerMaker : bool;
-    isBestMatch : bool
-  };;
+let printl = function
+  |Some {
+      id = id;
+      price = price;
+      qty = qty;
+      quote_qty = quote_qty;
+      time = time;
+      is_buyer_maker = is_buyer_maker;
+      is_best_match = is_best_match
+    } -> let* () = Lwt_io.printl (Decimal.to_string id) in
+    let* () = Lwt_io.printl (Decimal.to_string price) in
+    let* () = Lwt_io.printl (Decimal.to_string qty) in
+    let* () = Lwt_io.printl (Decimal.to_string quote_qty) in
+    let* () = Lwt_io.printl (Decimal.to_string time) in
+    let* () = Lwt_io.printl (string_of_bool is_buyer_maker) in
+    let* () = Lwt_io.printl (string_of_bool is_best_match) in
+    Lwt_io.printl ""
+  |None -> Lwt_io.printl "None response!";;
 
-  let parameters = let open P in [
-      ("symbol", Symbol.wrap symbol);
-      ("limit", string_of_int(Url.check_limit 1 1000 500 limit));
-      ("fromId", string_of_int P.from_id)
-    ];;
+let print_list t_list = Lwt_list.iter_s (printl) t_list;;
 
-  let endpoint = Url.build_public P.url "/api/v3/historicalTrades" parameters;;
+let parse_recent_trade_list json = 
+  json >>= fun json' -> Lwt.return (Data.get_list get_data json');;
 
-  let get_data = function
-    |fields
-      -> {
-          id = int_of_float (Ezjsonm.(find fields ["id"] |> get_float));
-          price = float_of_string Ezjsonm.(find fields ["price"] |> get_string);
-          qty = float_of_string  Ezjsonm.(find fields ["qty"] |> get_string);
-          quoteQty = float_of_string Ezjsonm.(find fields ["quoteQty"] |> get_string);
-          time = int_of_float (Ezjsonm.(find fields ["time"] |> get_float));
-          isBuyerMaker = Ezjsonm.(find fields ["isBuyerMaker"] |> get_bool);
-          isBestMatch = Ezjsonm.(find fields ["isBestMatch"] |> get_bool);
-        };;
-
-  let parse_recent_trade_list json = 
-    json >>= fun json' -> Lwt.return (Data.get_list get_data json');;
-
-  let get_older_trades () = parse_recent_trade_list (Requests.get endpoint);;
-end
+let get ~base_url:base_url ~endpoint:endpoint ~parameters:parameters = parse_recent_trade_list (Requests.get (Url.build_public base_url endpoint parameters));;

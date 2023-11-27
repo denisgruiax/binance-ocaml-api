@@ -1,3 +1,3 @@
 (library
- (name older_trade_lookup_test)
+ (name old_trade_lookup_test)
  (libraries binance_ocaml_api alcotest alcotest-lwt))

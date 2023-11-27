@@ -15,10 +15,10 @@ module type Cancel_order' = sig
     order_id : int;
     orig_client_order_id : string;
     client_order_id : string;
-    price : float;
-    orig_quantity : float;
-    executed_quantity : float;
-    cummulative_quote_quantity : float;
+    price : Decimal.t;
+    orig_quantity : Decimal.t;
+    executed_quantity : Decimal.t;
+    cummulative_quote_quantity : Decimal.t;
     status : Order_status.t;
     time_in_force : Time_in_force.t;
     order_type : Order_types.t;

@@ -1,0 +1,9 @@
+(include_subdirs unqualified)
+
+(library
+ (name response)
+ (public_name response)
+ (modules response error_code)
+ (libraries decimal lwt utilities variants)
+ (flags
+  (:standard -w -32-34-37-67-69)))

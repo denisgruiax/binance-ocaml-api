@@ -1,0 +1,24 @@
+(include_subdirs unqualified)
+
+(library
+ (name spot_trading)
+ (public_name spot_trading)
+ (modules spot_trading new_order)
+ (libraries
+  cstruct
+  cohttp
+  cohttp-lwt
+  cohttp-lwt-unix
+  conduit-lwt-unix
+  decimal
+  ezjsonm
+  lwt
+  lwt.unix
+  nocrypto
+  response
+  ssl
+  tls
+  utilities
+  variants)
+ (flags
+  (:standard -w -32-67-69)))

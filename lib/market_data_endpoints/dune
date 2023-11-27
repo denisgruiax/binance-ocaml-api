@@ -14,15 +14,16 @@
   symbol_price_ticker
   test_connectivity)
  (libraries
-  lwt
-  lwt.unix
-  conduit-lwt-unix
-  ezjsonm
   cohttp
   cohttp-lwt
   cohttp-lwt-unix
-  tls
+  conduit-lwt-unix
+  decimal
+  ezjsonm
+  lwt
+  lwt.unix
   ssl
+  tls
   utilities
   variants)
  (flags

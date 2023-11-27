@@ -33,9 +33,21 @@
  (depends ocaml dune))
 
 (package
+ (name response)
+ (synopsis
+  "Contains modules for holding the responses from Binance API inside records")
+ (depends ocaml dune))
+
+(package
  (name spot_account)
  (synopsis
-  "Contains modules for interacting with the spot wallet of a Binance account.")
+  "Contains modules for interacting with a spot account of Binance.")
+ (depends ocaml dune))
+
+(package
+ (name spot_trading)
+ (synopsis
+  "Contains modules for interacting with the trading functionalities of a Binance account.")
  (depends ocaml dune))
 
 (package
@@ -49,4 +61,5 @@
  (synopsis
   "A module that hold multiple enums used by Binance and and implemented with variant data types.")
  (depends ocaml dune))
+
 ; See the complete stanza docs at https://dune.readthedocs.io/en/stable/dune-files.html#dune-project

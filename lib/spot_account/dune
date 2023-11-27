@@ -3,20 +3,22 @@
 (library
  (name spot_account)
  (public_name spot_account)
-  (modules spot_account new_order)
+ (modules spot_account account)
  (libraries
-  lwt
-  lwt.unix
   cstruct
-  nocrypto
-  conduit-lwt-unix
-  ezjsonm
   cohttp
   cohttp-lwt
   cohttp-lwt-unix
-  tls
+  conduit-lwt-unix
+  decimal
+  ezjsonm
+  lwt
+  lwt.unix
+  nocrypto
+  response
   ssl
+  tls
   utilities
   variants)
  (flags
-  (:standard -w -67-69-32)))
+  (:standard -w -32-67-69)))
