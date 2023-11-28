@@ -3,7 +3,7 @@
 (library
  (name spot_trading)
  (public_name spot_trading)
- (modules spot_trading new_order)
+ (modules spot_trading cancel_order new_order)
  (libraries
   cstruct
   cohttp
