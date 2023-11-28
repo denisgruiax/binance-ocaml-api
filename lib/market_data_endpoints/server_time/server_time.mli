@@ -1,1 +1,1 @@
-val get : base_url:string -> endpoint:string -> int Lwt.t
+val get : base_url:string -> endpoint:string -> (Decimal.t, Error_code.t) result Lwt.t
