@@ -19,7 +19,7 @@ let send_order () =
   let* response_result = New_order.send ~base_url:base_url ~endpoint:endpoint ~api_key:api_key ~secret_key:secret_key ~parameters:parameters in
   let* is_error_result = Lwt.return (Result.is_error response_result) in
   let* error = Lwt.return (if is_error_result then Result.get_error response_result else failwith "Invalid response result") in
-  Alcotest.(check int "Verify code for not enough balance" 0 Decimal.(compare (of_int (-1001)) error.code)); Lwt.return ();;
+  Alcotest.(check int "Verify code for not enough balance" 0 Decimal.(compare (of_int (-2010)) error.code)); Lwt.return ();;
 
 let test_order_response_size switch () = 
   Lwt_switch.add_hook (Some switch) send_order; Lwt.return ();;

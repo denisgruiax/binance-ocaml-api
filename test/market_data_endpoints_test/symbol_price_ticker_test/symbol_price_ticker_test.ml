@@ -17,8 +17,6 @@ let bitcoin_price () = let* response_result = Symbol_price_ticker.get ~base_url:
   check bool "Symbol price" true (float_of_string (Decimal.to_string price) > 0.0);
   Lwt.return ();;
 
-Lwt_main.run (bitcoin_price ());;
-
 let test_bitcoin_price switch () = 
   Lwt_switch.add_hook (Some switch) bitcoin_price;Lwt.return ();;
 
