@@ -16,12 +16,12 @@ let get_depth_data = function
       ("lastUpdateId", `Float last_update_id);
       ("bids", bids);
       ("asks", asks)
-    ] -> Some {
+    ] -> Ok {
       last_update_id = Decimal.of_string (string_of_float last_update_id);
       bids = Data.get_list_from_list get_data bids;
       asks = Data.get_list_from_list get_data asks        
     }
-  |_ -> None;;
+  |error -> Error (Error_code.get error);;
 
 let parse_depth_data json = 
   json >>= fun json' -> Lwt.return(get_depth_data json');; 
