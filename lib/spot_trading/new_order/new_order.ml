@@ -1,6 +1,5 @@
 open Utilities;;
 open Lwt.Infix;;
-open Response;;
 open Variants;;
 
 type fill = {

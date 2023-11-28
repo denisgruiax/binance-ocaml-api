@@ -11,11 +11,11 @@
   cohttp-lwt-unix
   conduit-lwt-unix
   decimal
+  error_code
   ezjsonm
   lwt
   lwt.unix
   nocrypto
-  response
   ssl
   tls
   utilities

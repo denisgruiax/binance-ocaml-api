@@ -1,5 +1,4 @@
 open Variants;;
-open Response;;
 
 type fill = {
   price : Decimal.t;

@@ -33,9 +33,9 @@
  (depends ocaml dune))
 
 (package
- (name response)
+ (name error_code)
  (synopsis
-  "Contains modules for holding the responses from Binance API inside records")
+  "Contains modules for holding the error codes from Binance API inside a record.")
  (depends ocaml dune))
 
 (package
