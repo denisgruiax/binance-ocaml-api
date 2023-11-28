@@ -8,10 +8,10 @@ type t = {
   is_best_match : bool
 };;
 
-val get_data : [> Ezjsonm.t] -> t option
+val get_data : [> Ezjsonm.t] -> (t, Error_code.t) result
 
-val printl : t option -> unit Lwt.t
+val printl : (t, Error_code.t) result -> unit Lwt.t
 
-val print_list : t option list -> unit Lwt.t
+val print_list : (t, Error_code.t) result list -> unit Lwt.t
 
-val get : base_url:string -> endpoint:string -> parameters:(string * string) list -> t option list Lwt.t
+val get : base_url:string -> endpoint:string -> parameters:(string * string) list -> (t, Error_code.t) result list Lwt.t
