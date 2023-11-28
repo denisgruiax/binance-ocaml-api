@@ -12,7 +12,7 @@ let get = function
       msg = msg
     }
   |_ -> {
-      code = Decimal.of_int (-1001);
+      code = Decimal.of_int (-0001);
       msg = "Error code default value, something went worng, please check manually the API response!"
     };;
 
