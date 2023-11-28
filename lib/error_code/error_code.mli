@@ -1,8 +1,8 @@
-type error_code = {
+type t = {
   code : Decimal.t;
   msg : string
 };;
 
-val get : [> Ezjsonm.t] -> error_code
+val get : [> Ezjsonm.t] -> t
 
-val printl : error_code -> unit Lwt.t
+val printl : t -> unit Lwt.t

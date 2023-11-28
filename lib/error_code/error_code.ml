@@ -1,4 +1,4 @@
-type error_code = {
+type t = {
   code : Decimal.t;
   msg : string
 };;
