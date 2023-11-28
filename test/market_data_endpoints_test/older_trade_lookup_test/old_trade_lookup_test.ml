@@ -11,7 +11,7 @@ let parameters = [
 ];;
 
 let check_trade = let open Old_trade_lookup in function
-    |Some {
+    |Ok {
         id = val1;
         price = val2;
         qty = val3;
@@ -24,7 +24,7 @@ let check_trade = let open Old_trade_lookup in function
         |(1, 1, 1, 1, 1) -> true
         |_ -> false
       end
-    |None -> false;;
+    |Error _ -> false;;
 
 let check_list list_of_trades = List.fold_left (fun res elt -> (check_trade elt) && res) true list_of_trades;;
 

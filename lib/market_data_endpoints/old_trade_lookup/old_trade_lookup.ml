@@ -21,7 +21,7 @@ let get_data = function
       ("time", `Float time);
       ("isBuyerMaker", `Bool is_buyer_maker);
       ("isBestMatch", `Bool is_best_match);
-    ] -> Some {
+    ] -> Ok {
       id = Decimal.of_string (string_of_float id);
       price = Decimal.of_string price;
       qty = Decimal.of_string qty;
@@ -30,10 +30,10 @@ let get_data = function
       is_buyer_maker = is_buyer_maker;
       is_best_match = is_best_match
     }
-  |_ -> None;;
+  |error -> Error (Error_code.get error);;
 
 let printl = function
-  |Some {
+  |Ok {
       id = id;
       price = price;
       qty = qty;
@@ -49,7 +49,7 @@ let printl = function
     let* () = Lwt_io.printl (string_of_bool is_buyer_maker) in
     let* () = Lwt_io.printl (string_of_bool is_best_match) in
     Lwt_io.printl ""
-  |None -> Lwt_io.printl "None response!";;
+  |Error error -> Error_code.printl error;;
 
 let print_list t_list = Lwt_list.iter_s (printl) t_list;;
 

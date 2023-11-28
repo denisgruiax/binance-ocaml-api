@@ -16,13 +16,13 @@ let check_pair (x, y) = match (Decimal.(compare x zero), Decimal.(compare y zero
 let check_list list_of_orders = List.fold_left (fun res elt -> (check_pair elt) && res) true list_of_orders;;
 
 let check_depth = let open Order_book in function
-    |Some {
+    |Ok {
         last_update_id = last_update_id;
         bids = bids;
         asks = asks
       } -> if (last_update_id > Decimal.zero && check_list bids && check_list asks) 
       then true else false
-    |None -> false;;
+    |Error _ -> false;;
 
 let get_depth_data () = let* depth = Order_book.get_depth ~base_url:url ~endpoint:endpoint ~parameters:parameters in
   Alcotest.(check bool "Test depth data." true (check_depth depth)); Lwt.return ();;

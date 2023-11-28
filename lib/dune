@@ -4,9 +4,9 @@
  (name binance_ocaml_api)
  (public_name binance_ocaml_api)
  (libraries
+  error_code
   margin_account
   market_data_endpoints
-  response
   spot_account
   spot_trading
   utilities

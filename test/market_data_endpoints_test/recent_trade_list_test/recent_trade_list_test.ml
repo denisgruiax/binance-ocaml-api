@@ -3,7 +3,7 @@ open Utilities;;
 open Lwt.Syntax;;
 
 let check_trade = let open Recent_trade_list in function
-    |Some {
+    |Ok {
         id = val1;
         price = val2;
         qty = val3;
@@ -17,7 +17,7 @@ let check_trade = let open Recent_trade_list in function
         |(1, 1, 1, 1, 1) -> true
         |_ -> false 
       end
-    |None -> false;;
+    |Error _ -> false;;
 
 let check_list list_of_trades = List.fold_left (fun res elt -> (check_trade elt) && res) true list_of_trades;;
 

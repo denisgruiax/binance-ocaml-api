@@ -5,8 +5,8 @@ let get_data = function
   |`O[
       ("symbol", `String symbol);
       ("price", `String price)
-    ] -> (Symbol.unwrap symbol, Decimal.of_string price)
-  |_ -> (Symbol.unwrap"ERROR", Decimal.of_int (-1));;
+    ] -> Ok (Symbol.unwrap symbol, Decimal.of_string price)
+  |error -> Error (Error_code.get error);;
 
 let parse_symbol_price json = let open Lwt.Infix in 
   json >>= fun json' -> Lwt.return (get_data json');;

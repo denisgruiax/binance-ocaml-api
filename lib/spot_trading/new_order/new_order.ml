@@ -1,6 +1,5 @@
 open Utilities;;
 open Lwt.Infix;;
-open Response;;
 open Variants;;
 
 type fill = {
@@ -11,7 +10,7 @@ type fill = {
   trade_id : Decimal.t
 };;
 
-type ack = {
+type ack_response = {
   symbol : Symbol.t;
   order_id : Decimal.t;
   order_list_id : Decimal.t;
@@ -19,8 +18,8 @@ type ack = {
   transact_time: Decimal.t
 };;
 
-type result = {
-  ack : ack option;
+type result_response = {
+  ack_response : (ack_response, Error_code.t) result;
   price : Decimal.t;
   orig_qty : Decimal.t;
   executed_qty : Decimal.t;
@@ -33,12 +32,12 @@ type result = {
   self_trade_prevention_mode : string
 };;
 
-type full = {
-  result : result option;
-  fills : fill option list
+type full_response = {
+  result_response : (result_response, Error_code.t) result;
+  fills : (fill, Error_code.t) result list
 };;
 
-type new_order_response = Ack of ack option | Result of result option | Full of full option | Error_code of Error_code.error_code option;;
+type new_order_response = Ack of ((ack_response, Error_code.t) result) | Result of ((result_response, Error_code.t) result) | Full of ((full_response, Error_code.t) result);;
 
 let get_fill = function
   |`O[
@@ -47,17 +46,17 @@ let get_fill = function
       ("commission", `String commission);
       ("commissionAsset", `String commission_asset);
       ("tradeId", `Float trade_id)
-    ] -> Some {
+    ] -> Ok {
       price = Decimal.of_string price;
       qty = Decimal.of_string qty;
       commission = Decimal.of_string commission;
       commission_asset = commission_asset;
       trade_id = Decimal.of_int (int_of_float trade_id)
     }
-  |_ -> None;;
+  |error -> Error (Error_code.get error);;
 
 let print_fill = function
-  |Some fill -> begin match fill with
+  |Ok fill -> begin match fill with
         {
           price = price;
           qty = qty;
@@ -67,7 +66,7 @@ let print_fill = function
         } -> let open Decimal in 
         Lwt_io.printf "price = %s\nqty = %s\ncommission = %s\ncommission_asset%s\ntrade_id = %s\n\n" (to_string price) (to_string qty) (to_string commission) (commission_asset) (to_string trade_id)
     end
-  |_ -> Lwt.return ();;
+  |Error error -> Error_code.printl error;;
 
 let print_fills fills = Lwt_list.iter_s (print_fill) fills;;
 
@@ -78,17 +77,17 @@ let get_ack = function
       ("orderListId", `Float order_list_id);
       ("clientOrderId", `String client_order_id);
       ("transactTime", `Float transact_time);
-    ] -> Some { (*Here add Some Ack {ack} or Ack {ack}*)
+    ] -> Ok { (*Here add Some Ack {ack_response} or Ack {ack_response}*)
       symbol = Symbol.unwrap symbol;
       order_id = Decimal.of_int (int_of_float order_id);
       order_list_id = Decimal.of_int (int_of_float order_list_id);
       client_order_id = client_order_id;
       transact_time = Decimal.of_int (int_of_float transact_time)
     }
-  |_ -> None;;
+  |error -> Error (Error_code.get error);;
 
 let print_ack = function
-  |Some ack -> begin match ack with
+  |Ok ack_response -> begin match ack_response with
       |{
         symbol = symbol;
         order_id = order_id;
@@ -103,7 +102,7 @@ let print_ack = function
         let* () = printf "transact_time = %s\n\n" (Decimal.to_string transact_time) in
         Lwt.return ()
     end
-  |None -> Lwt.return ();;
+  |Error error -> Error_code.printl error;;
 
 let get_result = function
   |`O[
@@ -122,8 +121,8 @@ let get_result = function
       ("side", `String side);
       ("workingTime", `Float working_time);
       ("selfTradePreventionMode", `String self_trade_prevention_mode);
-    ] -> Some {
-      ack = get_ack (`O[
+    ] -> Ok {
+      ack_response = get_ack (`O[
           ("symbol", `String symbol);
           ("orderId", `Float order_id);
           ("orderListId", `Float order_list_id);
@@ -142,12 +141,12 @@ let get_result = function
       working_time = Decimal.of_int (int_of_float working_time);
       self_trade_prevention_mode = self_trade_prevention_mode
     }
-  |_ -> None;;
+  |error -> Error (Error_code.get error);;
 
 let print_result = function
-  |Some result -> begin match result with
+  |Ok result_response -> begin match result_response with
       |{
-        ack = ack;
+        ack_response = ack_response;
         price = price;
         orig_qty = orig_qty;
         executed_qty = executed_qty;
@@ -159,7 +158,7 @@ let print_result = function
         working_time = working_time;
         self_trade_prevention_mode = self_trade_prevention_mode
       } -> let open Lwt.Syntax in let open Lwt_io in
-        let* () = print_ack ack in
+        let* () = print_ack ack_response in
         let* () = printf "price = %s\n" (Decimal.to_string price) in
         let* () = printf "orig_qty = %s\n" (Decimal.to_string orig_qty) in
         let* () = printf "executed_qty = %s\n" (Decimal.to_string executed_qty) in
@@ -172,7 +171,7 @@ let print_result = function
         let* () = printf "self_trade_prevention_mode = %s\n\n" self_trade_prevention_mode in
         Lwt.return ()
     end
-  |None -> Lwt.return ();;
+  |Error error -> Error_code.printl error;;
 
 let get_full = function
   |`O[
@@ -192,8 +191,8 @@ let get_full = function
       ("workingTime", `Float working_time);
       ("selfTradePreventionMode", `String self_trade_prevention_mode);
       ("fills", fills)
-    ] -> Some {
-      result = get_result (
+    ] -> Ok {
+      result_response = get_result (
           `O[
             ("symbol", `String symbol);
             ("orderId", `Float order_id);
@@ -214,20 +213,20 @@ let get_full = function
 
       fills = Data.get_list get_fill fills
     }
-  |_ -> None;;
+  |error -> Error (Error_code.get error);;
 
 let print_full = function
-  |Some full -> begin match full with
+  |Ok full_response -> begin match full_response with
       |{
-        result = result;
+        result_response = result_response;
         fills = fills
       } -> let open Lwt.Syntax in
-        let* () = print_result result in
+        let* () = print_result result_response in
         let* () = print_fills fills in
         let* () = Lwt_io.printl "" in
         Lwt.return ()
     end
-  |None -> Lwt.return ();;
+  |Error error -> Error_code.printl error;;
 
 let get = function
   |`O[
@@ -236,13 +235,13 @@ let get = function
       ("orderListId", `Float order_list_id);
       ("clientOrderId", `String client_order_id);
       ("transactTime", `Float transact_time);
-    ] -> Ack (Some { (*Here add Some Ack {ack} or Ack {ack}*)
+    ] -> Ok (Ack (Ok { (*Here add Some Ack {ack_response} or Ack {ack_response}*)
       symbol = Symbol.unwrap symbol;
       order_id = Decimal.of_int (int_of_float order_id);
       order_list_id = Decimal.of_int (int_of_float order_list_id);
       client_order_id = client_order_id;
       transact_time = Decimal.of_int (int_of_float transact_time)
-    })
+    }))
 
   |`O[
       ("symbol", `String symbol);
@@ -260,8 +259,8 @@ let get = function
       ("side", `String side);
       ("workingTime", `Float working_time);
       ("selfTradePreventionMode", `String self_trade_prevention_mode);
-    ] -> Result (Some {
-      ack = get_ack (`O[
+    ] -> Ok (Result (Ok {
+      ack_response = get_ack (`O[
           ("symbol", `String symbol);
           ("orderId", `Float order_id);
           ("orderListId", `Float order_list_id);
@@ -279,7 +278,7 @@ let get = function
       side = Order_side.unwrap side;
       working_time = Decimal.of_int (int_of_float working_time);
       self_trade_prevention_mode = self_trade_prevention_mode
-    })
+    }))
 
   |`O[
       ("symbol", `String symbol);
@@ -298,8 +297,8 @@ let get = function
       ("workingTime", `Float working_time);
       ("selfTradePreventionMode", `String self_trade_prevention_mode);
       ("fills", fills)
-    ] -> Full (Some {
-      result = get_result (
+    ] -> Ok (Full (Ok {
+      result_response = get_result (
           `O[
             ("symbol", `String symbol);
             ("orderId", `Float order_id);
@@ -319,14 +318,14 @@ let get = function
           ]);
 
       fills = Data.get_list get_fill fills
-    })
-  |error_code -> Error_code (Error_code.get error_code);;
+    }))
+  |error -> Error (Error_code.get error);;
 
 let printl = function
-  |Ack ack -> print_ack ack
-  |Result result -> print_result result
-  |Full full -> print_full full
-  |Error_code error_code -> Error_code.printl error_code;;
+  |Ok (Ack ack_response) -> print_ack ack_response
+  |Ok (Result result_response) -> print_result result_response
+  |Ok (Full full_response) -> print_full full_response
+  |Error error_code -> Error_code.printl error_code;;
 
 let parse_response json = 
   json >>= fun json' -> Lwt.return (get json');; 

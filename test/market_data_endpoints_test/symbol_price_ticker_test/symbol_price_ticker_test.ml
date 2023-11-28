@@ -9,13 +9,13 @@ let parameters = [
   ("symbol", "BTCUSDT")
 ]
 
-let bitcoin_price () = let* symbol, price = Symbol_price_ticker.get ~base_url:base_url ~endpoint:endpoint ~parameters:parameters in
+let bitcoin_price () = let* response_result = Symbol_price_ticker.get ~base_url:base_url ~endpoint:endpoint ~parameters:parameters in
+  let* is_valid_result = Lwt.return (Result.is_ok response_result) in
+  let* symbol, price = Lwt.return (if is_valid_result then Result.get_ok response_result else failwith "Invalid result response!") in
   let open Alcotest in
   check bool "Symbol name" true ((Symbol.wrap symbol) = "BTCUSDT"); 
   check bool "Symbol price" true (float_of_string (Decimal.to_string price) > 0.0);
   Lwt.return ();;
-
-Lwt_main.run (bitcoin_price ());;
 
 let test_bitcoin_price switch () = 
   Lwt_switch.add_hook (Some switch) bitcoin_price;Lwt.return ();;

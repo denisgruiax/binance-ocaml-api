@@ -19,7 +19,7 @@ type account = {
   taker_commision : Decimal.t;
   buyer_commission : Decimal.t;
   seller_commission : Decimal.t;
-  commission_rates : commission_rate option;
+  commission_rates : (commission_rate, Error_code.t) result;
   can_trade : bool;
   can_withdraw : bool;
   can_deposit : bool;
@@ -28,7 +28,7 @@ type account = {
   prevent_sor : bool;
   update_time : Decimal.t;
   account_type : string;
-  balances : balance option list;
+  balances : (balance, Error_code.t) result list;
   permissions : string list;
   uid : Decimal.t
 };;
@@ -39,16 +39,16 @@ let get_commission_rates = function
       ("taker", `String taker);
       ("buyer", `String buyer);
       ("seller", `String seller);
-    ] -> Some {
+    ] -> Ok {
       maker = Decimal.of_string maker;
       taker = Decimal.of_string taker;
       buyer = Decimal.of_string buyer;
       seller = Decimal.of_string seller;
     }
-  |_ -> None;;
+  |error -> Error (Error_code.get error);;
 
 let print_commission_rates = function
-  |Some commission_rate -> begin match commission_rate with
+  |Ok commission_rate -> begin match commission_rate with
       |{
         maker = maker;
         taker = taker;
@@ -56,30 +56,30 @@ let print_commission_rates = function
         seller = seller
       } -> let open Decimal in Lwt_io.printf "maker = %s\ntaker = %s\nbuyer = %s\nseller = %s\n" (to_string maker) (to_string taker) (to_string buyer) (to_string seller)
     end
-  |None -> Lwt.return ();;
+  |Error error -> Error_code.printl error;;
 
 let get_balance = function
   |`O[
       ("asset", `String asset);
       ("free", `String free);
       ("locked", `String locked)
-    ] -> Some{
+    ] -> Ok{
       asset = asset;
       free = Decimal.of_string free;
       locked = Decimal.of_string locked
     }
-  |_ -> None;;
+  |error -> Error (Error_code.get error);;
 
 let get_balances balances = Data.get_list get_balance balances;;
 
 let print_balance = function
-  |Some balance -> begin match balance with 
+  |Ok balance -> begin match balance with 
       |{
         asset = asset;
         free = free;
         locked = locked
       } -> Lwt_io.printf "asset = %s\nfree = %s\nlocked = %s\n\n" asset (Decimal.to_string free) (Decimal.to_string locked) end
-  |None -> Lwt.return ();;
+  |Error error -> Error_code.printl error;;
 
 let print_balances balances = Lwt_list.iter_s (print_balance) balances;;
 
@@ -105,7 +105,7 @@ let get_data = function
       ("balances", balances);
       ("permissions", permissions);
       ("uid", `Float uid);
-    ] -> Some {
+    ] -> Ok {
       maker_commission = Decimal.of_int (int_of_float maker_commission);
       taker_commision = Decimal.of_int (int_of_float taker_commision);
       buyer_commission = Decimal.of_int (int_of_float buyer_commission);
@@ -123,7 +123,7 @@ let get_data = function
       permissions = get_permissions permissions;
       uid = Decimal.of_int (int_of_float uid)
     }
-  |_ -> None
+  |error -> Error (Error_code.get error);;
 
 let parse_response json = 
   json >>= fun json' -> Lwt.return(get_data json');;
@@ -133,7 +133,7 @@ let get_account base_url endpoint api_key secret_key parameters =
   parse_response (Requests.get_signed url (Requests.create_header api_key));;
 
 let print_account = function
-  |Some account -> begin match account with 
+  |Ok account -> begin match account with 
       |{
         maker_commission = maker_commission;
         taker_commision = taker_commision;
@@ -173,4 +173,4 @@ let print_account = function
         let* () = Lwt_io.printf "uid : %s\n" (Decimal.to_string uid) in
         Lwt.return ()
     end
-  |None -> Lwt_io.printf "Wrong API response for account fetch!";;
+  |Error error -> Error_code.printl error;;
