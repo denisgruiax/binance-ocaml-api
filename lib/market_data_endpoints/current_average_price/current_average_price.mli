@@ -3,4 +3,4 @@ type t = {
   price : Decimal.t
 };;
 
-val get : base_url:string -> endpoint:string -> parameters:(string * string) list -> t option Lwt.t
+val get : base_url:string -> endpoint:string -> parameters:(string * string) list -> (t, Error_code.t) result Lwt.t

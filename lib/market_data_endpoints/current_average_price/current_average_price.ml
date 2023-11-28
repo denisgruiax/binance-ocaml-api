@@ -10,11 +10,11 @@ let get_data = function
   |`O[
       ("mins", `Float mins);
       ("price", `String price)
-    ] -> Some {
+    ] -> Ok {
       mins = Decimal.of_string (string_of_float mins);
       price = Decimal.of_string price
     }
-  |_ -> None;;
+  |error -> Error (Error_code.get error);;
 
 let parse_data json = json >>= fun json' -> Lwt.return (get_data json');;
 
