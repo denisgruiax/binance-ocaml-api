@@ -6,8 +6,9 @@ let url = Base_urls.api_default;;
 let endpoint = Endpoints.Market_data.current_average_price;;
 let parameters = ["symbol", "XRPUSDT"];;
 
-let get_current_average_price () = let* response_option = Current_average_price.get ~base_url:url ~endpoint:endpoint ~parameters:parameters in
-  let* response = Lwt.return (Option.get response_option) in
+let get_current_average_price () = let* response_result = Current_average_price.get ~base_url:url ~endpoint:endpoint ~parameters:parameters in
+  let* is_valid_value = Lwt.return (Result.is_ok response_result) in
+  let* response = Lwt.return(if is_valid_value then Result.get_ok response_result else failwith "Invalid response result") in
   Alcotest.(check bool "Check XRPUSDT average price." true (response.price > Decimal.zero)); Lwt.return ();;
 
 let test_get_current_average_price switch () = 
