@@ -41,7 +41,7 @@ Personally, I made use of WSL with Visual Studio Code, and most of time i used t
 
 2. Install OCAML packages
 ```sh
-   opam install merlin ocp-indent lwt domainslib ezjsonm cohttp cohttp-lwt cohttp-lwt-unix tls ssl alcotest alcotest-lwt nocrypto 
+   opam install merlin ocp-indent lwt domainslib ezjsonm cohttp cohttp-lwt cohttp-lwt-unix tls tls-lwt ssl lwt-ssl alcotest alcotest-lwt nocrypto http-lwt-client cohttp-lwt-unix
 ```
    
 3. Configure Visual Studio Code to run OCaml code.
